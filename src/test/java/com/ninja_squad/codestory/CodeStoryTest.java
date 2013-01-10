@@ -31,7 +31,7 @@ public class CodeStoryTest {
     @Test
     public void step1() throws Exception {
         final String result = Request.Get(getURL("/?q=Quelle+est+ton+adresse+email")).execute().returnContent().asString();
-        assertThat(result).contains("cyril+codestory@ninja-squad.com");
+        assertThat(result).isEqualTo("cyril+codestory@ninja-squad.com");
     }
 
     @Test
