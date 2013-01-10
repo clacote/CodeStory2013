@@ -7,6 +7,14 @@
     <groupId>com.ninja_squad.codestory</groupId>
     <artifactId>codestory2013</artifactId>
     <version>1.0-SNAPSHOT</version>
+    <developers>
+        <developer>
+            <id>cyril</id>
+            <name>Cyril Lacote</name>
+            <organization>Ninja Squad</organization>
+            <organizationUrl>http://ninja-squad.com</organizationUrl>
+        </developer>
+    </developers>
 
     <dependencies>
         <dependency>
@@ -33,6 +41,16 @@
     </dependencies>
     <build>
         <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>2.5.1</version>
+                <configuration>
+                    <encoding>UTF-8</encoding>
+                    <source>1.6</source>
+                    <target>1.6</target>
+                </configuration>
+            </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-dependency-plugin</artifactId>
