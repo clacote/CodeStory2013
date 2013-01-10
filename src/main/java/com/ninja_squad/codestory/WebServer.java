@@ -8,15 +8,21 @@ import java.util.concurrent.Executors;
 
 public class WebServer {
 
-
-    public static final int PORT = 8080;
-
     public static void main(String[] args) throws IOException {
-        InetSocketAddress addr = new InetSocketAddress(PORT);
-        HttpServer server = HttpServer.create(addr, 0);
+
+        final int port = getPort();
+        HttpServer server = HttpServer.create(new InetSocketAddress(port), 0);
 
         server.createContext("/", new CodeStoryHandler());
         server.setExecutor(Executors.newCachedThreadPool());
         server.start();
-        System.out.printf("Server is listening on port %d\n", PORT);
-    }}
+        System.out.printf("Server is listening on port %d\n", port);
+    }
+
+    public static final int DEFAULT_PORT = 8080;
+    private static int getPort() {
+        String envPort = System.getenv("PORT");
+        return envPort != null ? Integer.valueOf(envPort) : DEFAULT_PORT;
+
+    }
+}
