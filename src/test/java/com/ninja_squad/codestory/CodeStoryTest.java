@@ -4,6 +4,7 @@ import org.apache.http.HttpResponse;
 import org.apache.http.client.fluent.Request;
 import static org.fest.assertions.Assertions.assertThat;
 
+import org.apache.http.entity.ContentType;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -47,7 +48,16 @@ public class CodeStoryTest {
     @Test
     public void step4() throws Exception {
         final String answer = ask("q=Es+tu+pret+a+recevoir+une+enonce+au+format+markdown+par+http+post(OUI/NON)");
-        assertThat(answer).isEqualTo("NON");
+        assertThat(answer).isEqualTo("OUI");
+    }
+
+    @Test
+    public void post() throws Exception {
+        final HttpResponse response = Request.Post(getURL("/?q"))
+            .bodyString("Une question Markdown", ContentType.TEXT_PLAIN)
+            .execute()
+            .returnResponse();
+        assertThat(response.getStatusLine().getStatusCode()).isEqualTo(HttpURLConnection.HTTP_CREATED);
     }
 
     private String ask(final String query) throws Exception {
@@ -61,9 +71,9 @@ public class CodeStoryTest {
     }
 
     @Test
-    public void badMethod() throws Exception {
-        final HttpResponse response = Request.Post(getURL("/")).execute().returnResponse();
-        assertThat(response.getStatusLine().getStatusCode()).isEqualTo(HttpURLConnection.HTTP_BAD_METHOD);
+    public void otherMethod() throws Exception {
+        final HttpResponse response = Request.Put(getURL("/")).execute().returnResponse();
+        assertThat(response.getStatusLine().getStatusCode()).isEqualTo(HttpURLConnection.HTTP_NOT_IMPLEMENTED);
     }
 
     private String getURL(String query) {
