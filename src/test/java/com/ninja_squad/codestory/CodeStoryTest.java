@@ -52,6 +52,12 @@ public class CodeStoryTest {
     }
 
     @Test
+    public void toujoursOui() throws Exception {
+        final String answer = ask("q=Est+ce+que+tu+reponds+toujours+oui(OUI/NON)");
+        assertThat(answer).isEqualTo("NON");
+    }
+
+    @Test
     public void post() throws Exception {
         final HttpResponse response = Request.Post(getURL("/?q"))
             .bodyString("Une question Markdown", ContentType.TEXT_PLAIN)

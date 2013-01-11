@@ -92,5 +92,6 @@ public class CodeStoryHandler implements HttpHandler {
         ANSWERS.put("q=Es+tu+abonne+a+la+mailing+list(OUI/NON)", "OUI");
         ANSWERS.put("q=Es+tu+heureux+de+participer(OUI/NON)", "OUI");
         ANSWERS.put("q=Es+tu+pret+a+recevoir+une+enonce+au+format+markdown+par+http+post(OUI/NON)", "OUI");
+        ANSWERS.put("q=Est+ce+que+tu+reponds+toujours+oui(OUI/NON)", "NON");
     }
 }
