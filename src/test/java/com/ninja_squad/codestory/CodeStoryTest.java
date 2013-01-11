@@ -10,6 +10,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import java.net.HttpURLConnection;
+import java.util.Random;
 
 public class CodeStoryTest {
 
@@ -67,6 +68,21 @@ public class CodeStoryTest {
     public void deuxPlusDeux() throws Exception {
         final String answer = ask("q=2+2");
         assertThat(answer).isEqualTo("4");
+    }
+
+    @Test
+    public void anyAddition() throws Exception {
+        final Random random = new Random();
+        final long randomA = random.nextLong();
+        final long randomB = random.nextLong();
+        final String answer = ask("q="+randomA+"+"+randomB);
+        assertThat(answer).isEqualTo(""+(randomA+randomB));
+    }
+
+    @Test
+    public void additionWithNegative() throws Exception {
+        final String answer = ask("q=-12+10");
+        assertThat(answer).isEqualTo("-2");
     }
 
     @Test
