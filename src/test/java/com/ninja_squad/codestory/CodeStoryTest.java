@@ -28,8 +28,24 @@ public class CodeStoryTest {
 
     @Test
     public void step1() throws Exception {
-        final String result = Request.Get(getURL("/?q=Quelle+est+ton+adresse+email")).execute().returnContent().asString();
-        assertThat(result).isEqualTo("cyril@ninja-squad.com");
+        test("q=Quelle+est+ton+adresse+email", "cyril@ninja-squad.com");
+    }
+
+    @Test
+    public void step2() throws Exception {
+        test("q=Es+tu+abonne+a+la+mailing+list(OUI/NON)", "OUI");
+    }
+
+    private String test(final String query, final String expectedAnswer) throws Exception {
+        final String actualAnswer = Request.Get(getURL("/?"+query)).execute().returnContent().asString();
+        assertThat(actualAnswer).isEqualTo(expectedAnswer);
+        return actualAnswer;
+    }
+
+    @Test
+    public void badRequest() throws Exception {
+        final HttpResponse response = Request.Get(getURL("/?q=UnknownQuestion")).execute().returnResponse();
+        assertThat(response.getStatusLine().getStatusCode()).isEqualTo(HttpURLConnection.HTTP_BAD_REQUEST);
     }
 
     @Test
