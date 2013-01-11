@@ -2,7 +2,6 @@ package com.ninja_squad.codestory;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.client.fluent.Request;
-import static org.fest.assertions.Assertions.*;
 import static org.fest.assertions.Assertions.assertThat;
 
 import org.junit.AfterClass;
@@ -36,6 +35,12 @@ public class CodeStoryTest {
     @Test
     public void step2() throws Exception {
         final String answer = ask("q=Es+tu+abonne+a+la+mailing+list(OUI/NON)");
+        assertThat(answer).isEqualTo("OUI");
+    }
+
+    @Test
+    public void step3() throws Exception {
+        final String answer = ask("q=Es+tu+heureux+de+participer(OUI/NON)");
         assertThat(answer).isEqualTo("OUI");
     }
 

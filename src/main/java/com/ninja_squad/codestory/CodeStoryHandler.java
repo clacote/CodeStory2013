@@ -60,5 +60,6 @@ public class CodeStoryHandler implements HttpHandler {
     static {
         ANSWERS.put("q=Quelle+est+ton+adresse+email", "cyril@ninja-squad.com");
         ANSWERS.put("q=Es+tu+abonne+a+la+mailing+list(OUI/NON)", "OUI");
+        ANSWERS.put("q=Es+tu+heureux+de+participer(OUI/NON)", "OUI");
     }
 }
