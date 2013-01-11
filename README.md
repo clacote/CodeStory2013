@@ -1,5 +1,7 @@
 # Code Story 2013
 
+[![Build Status](https://travis-ci.org/clacote/CodeStory2013.png)](https://travis-ci.org/clacote/CodeStory2013)
+
 Step 1 : http://code-story-2013-clacote.herokuapp.com/?q=Quelle+est+ton+adresse+email
 
 Built for free on [Travis CI](https://travis-ci.org/), hosted for free on [Heroku](http://www.heroku.com/).    
