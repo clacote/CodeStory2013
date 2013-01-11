@@ -58,6 +58,12 @@ public class CodeStoryTest {
     }
 
     @Test
+    public void unPlusUn() throws Exception {
+        final String answer = ask("q=1+1");
+        assertThat(answer).isEqualTo("2");
+    }
+
+    @Test
     public void post() throws Exception {
         final HttpResponse response = Request.Post(getURL("/?q"))
             .bodyString("Une question Markdown", ContentType.TEXT_PLAIN)
