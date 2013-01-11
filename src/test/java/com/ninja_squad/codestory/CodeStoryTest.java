@@ -3,6 +3,7 @@ package com.ninja_squad.codestory;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.fluent.Request;
 import static org.fest.assertions.Assertions.*;
+import static org.fest.assertions.Assertions.assertThat;
 
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
@@ -28,18 +29,18 @@ public class CodeStoryTest {
 
     @Test
     public void step1() throws Exception {
-        test("q=Quelle+est+ton+adresse+email", "cyril@ninja-squad.com");
+        final String answer = ask("q=Quelle+est+ton+adresse+email");
+        assertThat(answer).isEqualTo("cyril@ninja-squad.com");
     }
 
     @Test
     public void step2() throws Exception {
-        test("q=Es+tu+abonne+a+la+mailing+list(OUI/NON)", "OUI");
+        final String answer = ask("q=Es+tu+abonne+a+la+mailing+list(OUI/NON)");
+        assertThat(answer).isEqualTo("OUI");
     }
 
-    private String test(final String query, final String expectedAnswer) throws Exception {
-        final String actualAnswer = Request.Get(getURL("/?"+query)).execute().returnContent().asString();
-        assertThat(actualAnswer).isEqualTo(expectedAnswer);
-        return actualAnswer;
+    private String ask(final String query) throws Exception {
+        return Request.Get(getURL("/?"+query)).execute().returnContent().asString();
     }
 
     @Test
