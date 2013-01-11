@@ -23,7 +23,7 @@ public class CodeStoryHandler implements HttpHandler {
             exchange.sendResponseHeaders(HttpURLConnection.HTTP_OK, 0);
 
             PrintWriter responseWriter = new PrintWriter(responseBody, true);
-            responseWriter.print("cyril+codestory@ninja-squad.com");
+            responseWriter.print("cyril@ninja-squad.com");
             responseWriter.close();
         } else {
             exchange.sendResponseHeaders(HttpURLConnection.HTTP_BAD_METHOD, 0);

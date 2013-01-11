@@ -2,11 +2,9 @@ package com.ninja_squad.codestory;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.client.fluent.Request;
-import org.apache.http.client.fluent.Response;
 import static org.fest.assertions.Assertions.*;
 
 import org.junit.AfterClass;
-import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -31,7 +29,7 @@ public class CodeStoryTest {
     @Test
     public void step1() throws Exception {
         final String result = Request.Get(getURL("/?q=Quelle+est+ton+adresse+email")).execute().returnContent().asString();
-        assertThat(result).isEqualTo("cyril+codestory@ninja-squad.com");
+        assertThat(result).isEqualTo("cyril@ninja-squad.com");
     }
 
     @Test
