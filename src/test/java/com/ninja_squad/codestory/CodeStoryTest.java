@@ -80,6 +80,24 @@ public class CodeStoryTest {
     }
 
     @Test
+    public void anyMultiplication() throws Exception {
+        final Random random = new Random();
+        final int randomA = random.nextInt(10);
+        final int randomB = random.nextInt(10);
+        final String answer = ask("q="+randomA+"*"+randomB);
+        assertThat(answer).isEqualTo(""+(randomA*randomB));
+    }
+
+    @Test
+    public void anySubstraction() throws Exception {
+        final Random random = new Random();
+        final long randomA = random.nextLong();
+        final long randomB = random.nextLong();
+        final String answer = ask("q="+randomA+"-"+randomB);
+        assertThat(answer).isEqualTo(""+(randomA-randomB));
+    }
+
+    @Test
     public void additionWithNegative() throws Exception {
         final String answer = ask("q=-12+10");
         assertThat(answer).isEqualTo("-2");
@@ -107,6 +125,12 @@ public class CodeStoryTest {
     @Test
     public void badRequest() throws Exception {
         final HttpResponse response = Request.Get(getURL("/?q=UnknownQuestion")).execute().returnResponse();
+        assertThat(response.getStatusLine().getStatusCode()).isEqualTo(HttpURLConnection.HTTP_BAD_REQUEST);
+    }
+
+    @Test
+    public void root() throws Exception {
+        final HttpResponse response = Request.Get(getURL("/")).execute().returnResponse();
         assertThat(response.getStatusLine().getStatusCode()).isEqualTo(HttpURLConnection.HTTP_BAD_REQUEST);
     }
 

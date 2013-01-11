@@ -37,9 +37,9 @@ public class CodeStoryHandler implements HttpHandler {
 
     private void doGet(HttpExchange exchange) throws IOException {
         String query = getQuery(exchange);
-        String answer = answer(query);
         int responseCode = HttpURLConnection.HTTP_OK;
 
+        String answer = answer(query);
         if (answer == null) {
             answer = UNEXPECTED;
             responseCode = HttpURLConnection.HTTP_BAD_REQUEST;
@@ -84,11 +84,19 @@ public class CodeStoryHandler implements HttpHandler {
      */
     @VisibleForTesting
     protected String answer(final String query) {
-        System.out.println(query);
-        String answer = STATIC_ANSWERS.get(query);
-        if (answer == null) {
-            // Try to identify numerical additions
-            answer = addition(query);
+
+        String answer = null;
+        if (query != null) {
+
+            System.out.println(query);
+
+            // Try predefined answer
+            answer = STATIC_ANSWERS.get(query);
+
+            if (answer == null) {
+                // Try to identify numerical computation
+                answer = calculate(query);
+            }
         }
         return answer;
     }
@@ -103,15 +111,40 @@ public class CodeStoryHandler implements HttpHandler {
         STATIC_ANSWERS.put("q=As+tu+bien+recu+le+premier+enonce(OUI/NON)", "OUI");
     }
 
-    private final static Pattern ADDITION = Pattern.compile("q=(-?\\d+)\\+(-?\\d+)");
-    protected String addition(final String query) {
+    private final static Pattern CALCULATION = Pattern.compile("q=(-?\\d+)([\\+\\-\\*/])(-?\\d+)");
+    private String calculate(final String query) {
         String result = null;
-        Matcher matcher = ADDITION.matcher(query);
+        Matcher matcher = CALCULATION.matcher(query);
         if (matcher.matches()) {
             long a = Long.valueOf(matcher.group(1));
-            long b = Long.valueOf(matcher.group(2));
-            result = Long.toString(a+b);
+            String operator = matcher.group(2);
+            long b = Long.valueOf(matcher.group(3));
+
+            if (operator != null) {
+                Long lResult = calculate(a, operator.charAt(0), b);
+                if (lResult != null) {
+                    result = Long.toString(lResult);
+                }
+            }
         }
         return result;
+    }
+
+    /**
+     * Compute numerical operation between a and b, if operator is '+', '-', '*' or '/';
+     * @return mathematical result, or null if uncomputable
+     */
+    private Long calculate(long a, char operator, long b) {
+        switch (operator) {
+            case '+':
+                return a+b;
+            case '-':
+                return a-b;
+            case '*':
+                return a*b;
+            case '/':
+                return a/b;
+        }
+        return null;
     }
 }
