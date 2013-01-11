@@ -64,6 +64,18 @@ public class CodeStoryTest {
     }
 
     @Test
+    public void deuxPlusDeux() throws Exception {
+        final String answer = ask("q=2+2");
+        assertThat(answer).isEqualTo("4");
+    }
+
+    @Test
+    public void premierEnnonceRecu() throws Exception {
+        final String answer = ask("q=As+tu+bien+recu+le+premier+enonce(OUI/NON)");
+        assertThat(answer).isEqualTo("OUI");
+    }
+
+    @Test
     public void post() throws Exception {
         final HttpResponse response = Request.Post(getURL("/?q"))
             .bodyString("Une question Markdown", ContentType.TEXT_PLAIN)
