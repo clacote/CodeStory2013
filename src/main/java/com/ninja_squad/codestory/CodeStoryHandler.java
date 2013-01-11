@@ -2,6 +2,7 @@ package com.ninja_squad.codestory;
 
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Charsets;
+import com.google.common.collect.ImmutableMap;
 import com.google.common.io.CharStreams;
 import com.google.common.io.InputSupplier;
 import com.sun.net.httpserver.Headers;
@@ -10,7 +11,6 @@ import com.sun.net.httpserver.HttpHandler;
 
 import java.io.*;
 import java.net.HttpURLConnection;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -101,15 +101,14 @@ public class CodeStoryHandler implements HttpHandler {
         return answer;
     }
 
-    private static final Map<String, String> STATIC_ANSWERS = new HashMap<String, String>();
-    static {
-        STATIC_ANSWERS.put("q=Quelle+est+ton+adresse+email", "cyril@ninja-squad.com");
-        STATIC_ANSWERS.put("q=Es+tu+abonne+a+la+mailing+list(OUI/NON)", "OUI");
-        STATIC_ANSWERS.put("q=Es+tu+heureux+de+participer(OUI/NON)", "OUI");
-        STATIC_ANSWERS.put("q=Es+tu+pret+a+recevoir+une+enonce+au+format+markdown+par+http+post(OUI/NON)", "OUI");
-        STATIC_ANSWERS.put("q=Est+ce+que+tu+reponds+toujours+oui(OUI/NON)", "NON");
-        STATIC_ANSWERS.put("q=As+tu+bien+recu+le+premier+enonce(OUI/NON)", "OUI");
-    }
+    private static final Map<String, String> STATIC_ANSWERS = ImmutableMap.<String, String>builder()
+            .put("q=Quelle+est+ton+adresse+email", "cyril@ninja-squad.com")
+            .put("q=Es+tu+abonne+a+la+mailing+list(OUI/NON)", "OUI")
+            .put("q=Es+tu+heureux+de+participer(OUI/NON)", "OUI")
+            .put("q=Es+tu+pret+a+recevoir+une+enonce+au+format+markdown+par+http+post(OUI/NON)", "OUI")
+            .put("q=Est+ce+que+tu+reponds+toujours+oui(OUI/NON)", "NON")
+            .put("q=As+tu+bien+recu+le+premier+enonce(OUI/NON)", "OUI")
+            .build();
 
     private final static Pattern CALCULATION = Pattern.compile("q=(-?\\d+)([\\+\\-\\*/])(-?\\d+)");
     private String calculate(final String query) {
