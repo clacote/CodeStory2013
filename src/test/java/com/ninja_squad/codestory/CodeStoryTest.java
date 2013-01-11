@@ -44,6 +44,12 @@ public class CodeStoryTest {
         assertThat(answer).isEqualTo("OUI");
     }
 
+    @Test
+    public void step4() throws Exception {
+        final String answer = ask("q=Es+tu+pret+a+recevoir+une+enonce+au+format+markdown+par+http+post(OUI/NON)");
+        assertThat(answer).isEqualTo("NON");
+    }
+
     private String ask(final String query) throws Exception {
         return Request.Get(getURL("/?"+query)).execute().returnContent().asString();
     }
