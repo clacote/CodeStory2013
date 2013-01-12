@@ -21,4 +21,15 @@ public class ChangeComputerTest {
                 ImmutableMap.of(Unite.bar, 1)
         );
     }
+
+    @Test
+    public void change19() throws Exception {
+        assertThat(computer.change(19)).containsOnly(
+                ImmutableMap.of(Unite.foo, 19),
+                ImmutableMap.of(Unite.foo, 12, Unite.bar, 1),
+                ImmutableMap.of(Unite.foo, 5, Unite.bar, 2),
+                ImmutableMap.of(Unite.foo, 8, Unite.qix, 1),
+                ImmutableMap.of(Unite.foo, 1, Unite.bar, 1, Unite.qix, 1)
+        );
+    }
 }
