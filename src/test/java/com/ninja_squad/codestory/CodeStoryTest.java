@@ -73,8 +73,8 @@ public class CodeStoryTest {
     @Test
     public void anyAddition() throws Exception {
         final Random random = new Random();
-        final long randomA = random.nextLong();
-        final long randomB = random.nextLong();
+        final int randomA = random.nextInt(100);
+        final int randomB = random.nextInt(100);
         final String answer = ask("q=" + randomA + "+" + randomB);
         assertThat(answer).isEqualTo("" + (randomA + randomB));
     }
@@ -82,8 +82,8 @@ public class CodeStoryTest {
     @Test
     public void anyMultiplication() throws Exception {
         final Random random = new Random();
-        final int randomA = random.nextInt(10);
-        final int randomB = random.nextInt(10);
+        final int randomA = random.nextInt(100);
+        final int randomB = random.nextInt(100);
         final String answer = ask("q=" + randomA + "*" + randomB);
         assertThat(answer).isEqualTo("" + (randomA * randomB));
     }
@@ -91,8 +91,8 @@ public class CodeStoryTest {
     @Test
     public void anySubstraction() throws Exception {
         final Random random = new Random();
-        final long randomA = random.nextLong();
-        final long randomB = random.nextLong();
+        final int randomA = random.nextInt(100);
+        final int randomB = random.nextInt(100);
         final String answer = ask("q=" + randomA + "-" + randomB);
         assertThat(answer).isEqualTo("" + (randomA - randomB));
     }
@@ -101,6 +101,12 @@ public class CodeStoryTest {
     public void additionWithNegative() throws Exception {
         final String answer = ask("q=-12+10");
         assertThat(answer).isEqualTo("-2");
+    }
+
+    @Test
+    public void decimal() throws Exception {
+        final String answer = ask("q=(1+2)/2");
+        assertThat(answer).isEqualTo("1,5");
     }
 
     @Test

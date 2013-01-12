@@ -22,7 +22,7 @@ public class ChangeComputer {
         } else {
 
             Set<Unite> nextCandidate = EnumSet.copyOf(candidate);
-            for (Unite unite : nextCandidate) {
+            for (Unite unite : candidate) {
                 int remaining = sum - unite.getValue();
 
                 if (remaining >= 0) {

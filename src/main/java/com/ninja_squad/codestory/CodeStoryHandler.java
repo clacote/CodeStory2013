@@ -11,11 +11,17 @@ import com.sun.net.httpserver.Headers;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 
+import javax.script.ScriptEngine;
+import javax.script.ScriptEngineManager;
+import javax.script.ScriptException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.net.HttpURLConnection;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 import java.util.regex.Matcher;
@@ -43,7 +49,6 @@ public class CodeStoryHandler implements HttpHandler {
 
     private void doGet(HttpExchange exchange) throws IOException {
         String path = exchange.getRequestURI().getPath();
-        String query = exchange.getRequestURI().getQuery();
         int responseCode = HttpURLConnection.HTTP_OK;
 
         String answer = null;
@@ -54,6 +59,7 @@ public class CodeStoryHandler implements HttpHandler {
         }
 
         // Try query
+        String query = getQueryStringParameter(exchange, "q");
         if (answer == null && query != null && !query.isEmpty()) {
             answer = answer(query);
         }
@@ -64,6 +70,22 @@ public class CodeStoryHandler implements HttpHandler {
             responseCode = HttpURLConnection.HTTP_BAD_REQUEST;
         }
         sendResponse(exchange, answer, responseCode);
+    }
+
+    private String getQueryStringParameter(HttpExchange exchange, String name) {
+        String value = null;
+
+        String query = exchange.getRequestURI().getQuery();
+        if (query != null && !query.isEmpty()) {
+            StringBuilder paramRegex = new StringBuilder(name)
+                    .append("=([^&]+)");
+            Pattern pattern = Pattern.compile(paramRegex.toString());
+            Matcher matcher = pattern.matcher(query);
+            if (matcher.matches()) {
+                value = matcher.group(1);
+            }
+        }
+        return value;
     }
 
     private void doPost(final HttpExchange exchange) throws IOException {
@@ -132,50 +154,35 @@ public class CodeStoryHandler implements HttpHandler {
     }
 
     private static final Map<String, String> STATIC_ANSWERS = ImmutableMap.<String, String>builder()
-            .put("q=Quelle+est+ton+adresse+email", "cyril@ninja-squad.com")
-            .put("q=Es+tu+abonne+a+la+mailing+list(OUI/NON)", "OUI")
-            .put("q=Es+tu+heureux+de+participer(OUI/NON)", "OUI")
-            .put("q=Es+tu+pret+a+recevoir+une+enonce+au+format+markdown+par+http+post(OUI/NON)", "OUI")
-            .put("q=Est+ce+que+tu+reponds+toujours+oui(OUI/NON)", "NON")
-            .put("q=As+tu+bien+recu+le+premier+enonce(OUI/NON)", "OUI")
+            .put("Quelle+est+ton+adresse+email", "cyril@ninja-squad.com")
+            .put("Es+tu+abonne+a+la+mailing+list(OUI/NON)", "OUI")
+            .put("Es+tu+heureux+de+participer(OUI/NON)", "OUI")
+            .put("Es+tu+pret+a+recevoir+une+enonce+au+format+markdown+par+http+post(OUI/NON)", "OUI")
+            .put("Est+ce+que+tu+reponds+toujours+oui(OUI/NON)", "NON")
+            .put("As+tu+bien+recu+le+premier+enonce(OUI/NON)", "OUI")
             .build();
 
-    private final static Pattern CALCULATION = Pattern.compile("q=(-?\\d+)([\\+\\-\\*/])(-?\\d+)");
 
     private String calculate(final String query) {
         String result = null;
-        Matcher matcher = CALCULATION.matcher(query);
-        if (matcher.matches()) {
-            long a = Long.valueOf(matcher.group(1));
-            String operator = matcher.group(2);
-            long b = Long.valueOf(matcher.group(3));
-
-            if (operator != null) {
-                Long lResult = calculate(a, operator.charAt(0), b);
-                if (lResult != null) {
-                    result = Long.toString(lResult);
-                }
-            }
+        ScriptEngineManager mgr = new ScriptEngineManager();
+        ScriptEngine engine = mgr.getEngineByName("JavaScript");
+        try {
+            Object value = engine.eval(query);
+            result = getNumberFormat().format(value);
+        } catch (ScriptException e) {
+            // Not a evaluable query
         }
         return result;
     }
 
-    /**
-     * Compute numerical operation between a and b, if operator is '+', '-', '*' or '/';
-     *
-     * @return mathematical result, or null if uncomputable
-     */
-    private Long calculate(long a, char operator, long b) {
-        switch (operator) {
-            case '+':
-                return a + b;
-            case '-':
-                return a - b;
-            case '*':
-                return a * b;
-            case '/':
-                return a / b;
+    private static final String NUMBER_FORMAT = "###########0.##";
+
+    private NumberFormat getNumberFormat() {
+        NumberFormat format = NumberFormat.getInstance(Locale.FRENCH);
+        if (format instanceof DecimalFormat) {
+            ((DecimalFormat) format).applyPattern(NUMBER_FORMAT);
         }
-        return null;
+        return format;
     }
 }
