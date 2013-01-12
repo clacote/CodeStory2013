@@ -116,6 +116,12 @@ public class CodeStoryTest {
     }
 
     @Test
+    public void bigInput() throws Exception {
+        final String answer = ask("q=((1,1+2)+3,14+4+(5+6+7)+(8+9+10)*4267387833344334647677634)/2*553344300034334349999000");
+        assertThat(answer).isEqualTo("31878018903828900000000000000000000000000000000000");
+    }
+
+    @Test
     public void premierEnnonceRecu() throws Exception {
         final String answer = ask("q=As+tu+bien+recu+le+premier+enonce(OUI/NON)");
         assertThat(answer).isEqualTo("OUI");

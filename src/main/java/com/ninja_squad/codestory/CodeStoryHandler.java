@@ -187,7 +187,7 @@ public class CodeStoryHandler implements HttpHandler {
         return result;
     }
 
-    private static final String NUMBER_FORMAT = "###########0.##";
+    private static final String NUMBER_FORMAT = "0.##";
 
     private NumberFormat getNumberFormat() {
         NumberFormat format = NumberFormat.getInstance(Locale.FRENCH);
