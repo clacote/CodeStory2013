@@ -30,6 +30,7 @@ import java.util.regex.Pattern;
 public class CodeStoryHandler implements HttpHandler {
 
     public static final String UNEXPECTED = "I have no idea what you are doing";
+    public static final String ERROR = "Sorry, I failed";
 
     @Override
     public void handle(HttpExchange exchange) throws IOException {
@@ -37,13 +38,18 @@ public class CodeStoryHandler implements HttpHandler {
         Headers responseHeaders = exchange.getResponseHeaders();
         responseHeaders.set("Content-Type", "text/plain");
 
-        String requestMethod = exchange.getRequestMethod().toUpperCase();
-        if ("GET".equals(requestMethod)) {
-            doGet(exchange);
-        } else if ("POST".equals(requestMethod)) {
-            doPost(exchange);
-        } else {
-            sendResponse(exchange, UNEXPECTED, HttpURLConnection.HTTP_NOT_IMPLEMENTED);
+        try {
+            String requestMethod = exchange.getRequestMethod().toUpperCase();
+            if ("GET".equals(requestMethod)) {
+                doGet(exchange);
+            } else if ("POST".equals(requestMethod)) {
+                doPost(exchange);
+            } else {
+                sendResponse(exchange, UNEXPECTED, HttpURLConnection.HTTP_NOT_IMPLEMENTED);
+            }
+        } catch (Exception e) {
+            e.printStackTrace(System.err);
+            sendResponse(exchange, ERROR, HttpURLConnection.HTTP_INTERNAL_ERROR);
         }
     }
 
