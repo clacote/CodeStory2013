@@ -190,7 +190,6 @@ public class CodeStoryHandler implements HttpHandler {
 
     private NumberFormat getNumberFormat() {
         DecimalFormatSymbols dfs = new DecimalFormatSymbols(Locale.FRENCH);
-        dfs.setGroupingSeparator(' ');
-        return new DecimalFormat("#,###.##", dfs);
+        return new DecimalFormat("0.##", dfs);
     }
 }
