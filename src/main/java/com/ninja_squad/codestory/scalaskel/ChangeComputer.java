@@ -10,15 +10,14 @@ public class ChangeComputer {
 
     public Set<Map<Unite, Integer>> change(final int sum) {
         Set<Map<Unite, Integer>> results = Sets.newHashSet();
-        Map<Unite, Integer> initial = Maps.newEnumMap(Unite.class);
-        change(sum, initial, results);
+        change(sum, new int[Unite.values().length], results);
         return results;
     }
 
-    public void change(final int sum, Map<Unite, Integer> candidate, Set<Map<Unite, Integer>> results) {
+    public void change(final int sum, int[] candidate, Set<Map<Unite, Integer>> results) {
 
         if (sum == 0) {
-            results.add(candidate);
+            results.add(cleanCopy(candidate));
         } else {
 
             for (Unite unite : Unite.values()) {
@@ -26,13 +25,22 @@ public class ChangeComputer {
 
                 if (remaining >= 0) {
                     // We could use one more of this unit
-                    Map<Unite, Integer> nextCandidates = Maps.newEnumMap(candidate);
-                    int nb = candidate.get(unite) != null ? candidate.get(unite) : 0;
-                    nextCandidates.put(unite, nb + 1);
-                    change(remaining, nextCandidates, results);
+                    candidate[unite.ordinal()]++;
+                    change(remaining, candidate, results);
+                    candidate[unite.ordinal()]--;
                 }
             }
         }
+    }
+
+    private Map<Unite, Integer> cleanCopy(int[] candidate) {
+        Map<Unite, Integer> copy = Maps.newEnumMap(Unite.class);
+        for (Unite unite : Unite.values()) {
+            if (candidate[unite.ordinal()] > 0) {
+                copy.put(unite, candidate[unite.ordinal()]);
+            }
+        }
+        return copy;
     }
 
     private static ChangeComputer ourInstance = new ChangeComputer();
