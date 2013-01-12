@@ -10,10 +10,10 @@ import com.ninja_squad.codestory.scalaskel.Unite;
 import com.sun.net.httpserver.Headers;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
+import groovy.lang.Binding;
+import groovy.lang.GroovyRuntimeException;
+import groovy.lang.GroovyShell;
 
-import javax.script.ScriptEngine;
-import javax.script.ScriptEngineManager;
-import javax.script.ScriptException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -171,13 +171,14 @@ public class CodeStoryHandler implements HttpHandler {
 
     private String calculate(final String query) {
         String result = null;
-        ScriptEngineManager mgr = new ScriptEngineManager();
-        ScriptEngine engine = mgr.getEngineByName("JavaScript");
+        GroovyShell shell = new GroovyShell(new Binding());
         try {
-            Object value = engine.eval(query);
-            result = getNumberFormat().format(value);
-        } catch (ScriptException e) {
-            // Not a evaluable query
+            Object value = shell.evaluate(query);
+            if (value != null) {
+                result = getNumberFormat().format(value);
+            }
+        } catch (GroovyRuntimeException e) {
+            // Invalid expression
         }
         return result;
     }
