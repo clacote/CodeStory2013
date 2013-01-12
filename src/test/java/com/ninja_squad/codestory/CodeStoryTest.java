@@ -104,9 +104,15 @@ public class CodeStoryTest {
     }
 
     @Test
-    public void decimal() throws Exception {
+    public void decimalResult() throws Exception {
         final String answer = ask("q=(1+2)/2");
         assertThat(answer).isEqualTo("1,5");
+    }
+
+    @Test
+    public void decimalInput() throws Exception {
+        final String answer = ask("q=1,5*4");
+        assertThat(answer).isEqualTo("6");
     }
 
     @Test

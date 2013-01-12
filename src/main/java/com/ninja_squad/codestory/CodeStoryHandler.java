@@ -171,9 +171,13 @@ public class CodeStoryHandler implements HttpHandler {
 
     private String calculate(final String query) {
         String result = null;
+
+        // query is in French LOCALE
+        String formattedQuery = query.replace(',', '.');
+
         GroovyShell shell = new GroovyShell(new Binding());
         try {
-            Object value = shell.evaluate(query);
+            Object value = shell.evaluate(formattedQuery);
             if (value != null) {
                 result = getNumberFormat().format(value);
             }
