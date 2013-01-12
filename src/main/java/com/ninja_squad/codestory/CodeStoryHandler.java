@@ -20,6 +20,7 @@ import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.net.HttpURLConnection;
 import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
 import java.text.NumberFormat;
 import java.util.Locale;
 import java.util.Map;
@@ -187,13 +188,9 @@ public class CodeStoryHandler implements HttpHandler {
         return result;
     }
 
-    private static final String NUMBER_FORMAT = "0.##";
-
     private NumberFormat getNumberFormat() {
-        NumberFormat format = NumberFormat.getInstance(Locale.FRENCH);
-        if (format instanceof DecimalFormat) {
-            ((DecimalFormat) format).applyPattern(NUMBER_FORMAT);
-        }
-        return format;
+        DecimalFormatSymbols dfs = new DecimalFormatSymbols(Locale.FRENCH);
+        dfs.setGroupingSeparator(' ');
+        return new DecimalFormat("#,###.##", dfs);
     }
 }

@@ -82,8 +82,8 @@ public class CodeStoryTest {
     @Test
     public void anyMultiplication() throws Exception {
         final Random random = new Random();
-        final int randomA = random.nextInt(100);
-        final int randomB = random.nextInt(100);
+        final int randomA = random.nextInt(10);
+        final int randomB = random.nextInt(10);
         final String answer = ask("q=" + randomA + "*" + randomB);
         assertThat(answer).isEqualTo("" + (randomA * randomB));
     }
@@ -118,7 +118,7 @@ public class CodeStoryTest {
     @Test
     public void bigInput() throws Exception {
         final String answer = ask("q=((1,1+2)+3,14+4+(5+6+7)+(8+9+10)*4267387833344334647677634)/2*553344300034334349999000");
-        assertThat(answer).isEqualTo("31878018903828900000000000000000000000000000000000");
+        assertThat(answer).isEqualTo("31 878 018 903 828 900 000 000 000 000 000 000 000 000 000 000 000");
     }
 
     @Test
