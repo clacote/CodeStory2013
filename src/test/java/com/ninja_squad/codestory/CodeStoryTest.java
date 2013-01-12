@@ -2,8 +2,6 @@ package com.ninja_squad.codestory;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.client.fluent.Request;
-import static org.fest.assertions.Assertions.assertThat;
-
 import org.apache.http.entity.ContentType;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
@@ -11,6 +9,8 @@ import org.junit.Test;
 
 import java.net.HttpURLConnection;
 import java.util.Random;
+
+import static org.fest.assertions.Assertions.assertThat;
 
 public class CodeStoryTest {
 
@@ -75,8 +75,8 @@ public class CodeStoryTest {
         final Random random = new Random();
         final long randomA = random.nextLong();
         final long randomB = random.nextLong();
-        final String answer = ask("q="+randomA+"+"+randomB);
-        assertThat(answer).isEqualTo(""+(randomA+randomB));
+        final String answer = ask("q=" + randomA + "+" + randomB);
+        assertThat(answer).isEqualTo("" + (randomA + randomB));
     }
 
     @Test
@@ -84,8 +84,8 @@ public class CodeStoryTest {
         final Random random = new Random();
         final int randomA = random.nextInt(10);
         final int randomB = random.nextInt(10);
-        final String answer = ask("q="+randomA+"*"+randomB);
-        assertThat(answer).isEqualTo(""+(randomA*randomB));
+        final String answer = ask("q=" + randomA + "*" + randomB);
+        assertThat(answer).isEqualTo("" + (randomA * randomB));
     }
 
     @Test
@@ -93,8 +93,8 @@ public class CodeStoryTest {
         final Random random = new Random();
         final long randomA = random.nextLong();
         final long randomB = random.nextLong();
-        final String answer = ask("q="+randomA+"-"+randomB);
-        assertThat(answer).isEqualTo(""+(randomA-randomB));
+        final String answer = ask("q=" + randomA + "-" + randomB);
+        assertThat(answer).isEqualTo("" + (randomA - randomB));
     }
 
     @Test
@@ -110,16 +110,34 @@ public class CodeStoryTest {
     }
 
     @Test
+    public void scalascel1() throws Exception {
+        final String answer = get("/scalaskel/change/1");
+        assertThat(answer).contains("{\"foo\":1}");
+    }
+
+    @Test
+    public void scalascel7() throws Exception {
+        final String answer = get("/scalaskel/change/7");
+        assertThat(answer)
+                .contains("{\"foo\":7}")
+                .contains("{\"bar\":1}");
+    }
+
+    @Test
     public void post() throws Exception {
         final HttpResponse response = Request.Post(getURL("/?q"))
-            .bodyString("Une question Markdown", ContentType.TEXT_PLAIN)
-            .execute()
-            .returnResponse();
+                .bodyString("Une question Markdown", ContentType.TEXT_PLAIN)
+                .execute()
+                .returnResponse();
         assertThat(response.getStatusLine().getStatusCode()).isEqualTo(HttpURLConnection.HTTP_CREATED);
     }
 
     private String ask(final String query) throws Exception {
-        return Request.Get(getURL("/?"+query)).execute().returnContent().asString();
+        return Request.Get(getURL("/?" + query)).execute().returnContent().asString();
+    }
+
+    private String get(final String path) throws Exception {
+        return Request.Get(getURL(path)).execute().returnContent().asString();
     }
 
     @Test
@@ -141,6 +159,6 @@ public class CodeStoryTest {
     }
 
     private String getURL(String query) {
-        return "http://localhost:"+PORT+query;
+        return "http://localhost:" + PORT + query;
     }
 }

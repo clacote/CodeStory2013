@@ -5,13 +5,19 @@ import com.google.common.base.Charsets;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.io.CharStreams;
 import com.google.common.io.InputSupplier;
+import com.ninja_squad.codestory.scalaskel.ChangeComputer;
+import com.ninja_squad.codestory.scalaskel.Unite;
 import com.sun.net.httpserver.Headers;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 
-import java.io.*;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.io.PrintWriter;
 import java.net.HttpURLConnection;
 import java.util.Map;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -36,10 +42,23 @@ public class CodeStoryHandler implements HttpHandler {
     }
 
     private void doGet(HttpExchange exchange) throws IOException {
-        String query = getQuery(exchange);
+        String path = exchange.getRequestURI().getPath();
+        String query = exchange.getRequestURI().getQuery();
         int responseCode = HttpURLConnection.HTTP_OK;
 
-        String answer = answer(query);
+        String answer = null;
+
+        // Try scalaskel
+        if (path != null && !path.isEmpty()) {
+            answer = scalaskel(path);
+        }
+
+        // Try query
+        if (answer == null && query != null && !query.isEmpty()) {
+            answer = answer(query);
+        }
+
+        // No answer possible
         if (answer == null) {
             answer = UNEXPECTED;
             responseCode = HttpURLConnection.HTTP_BAD_REQUEST;
@@ -72,10 +91,6 @@ public class CodeStoryHandler implements HttpHandler {
         responseBody.close();
     }
 
-    private String getQuery(HttpExchange exchange) {
-        return exchange.getRequestURI().getQuery();
-    }
-
     /**
      * Answer given query.
      *
@@ -101,6 +116,21 @@ public class CodeStoryHandler implements HttpHandler {
         return answer;
     }
 
+    private static final String SCALASKEL_PATH = "/scalaskel/change/";
+
+    private String scalaskel(String path) {
+        String result = null;
+        if (path.startsWith(SCALASKEL_PATH)) {
+            String strValue = path.substring(SCALASKEL_PATH.length(), path.length());
+            if (!strValue.isEmpty()) {
+                int value = Integer.valueOf(strValue);
+                Set<Map<Unite, Integer>> change = ChangeComputer.getInstance().change(value);
+                result = JSON.toJson(change);
+            }
+        }
+        return result;
+    }
+
     private static final Map<String, String> STATIC_ANSWERS = ImmutableMap.<String, String>builder()
             .put("q=Quelle+est+ton+adresse+email", "cyril@ninja-squad.com")
             .put("q=Es+tu+abonne+a+la+mailing+list(OUI/NON)", "OUI")
@@ -111,6 +141,7 @@ public class CodeStoryHandler implements HttpHandler {
             .build();
 
     private final static Pattern CALCULATION = Pattern.compile("q=(-?\\d+)([\\+\\-\\*/])(-?\\d+)");
+
     private String calculate(final String query) {
         String result = null;
         Matcher matcher = CALCULATION.matcher(query);
@@ -131,18 +162,19 @@ public class CodeStoryHandler implements HttpHandler {
 
     /**
      * Compute numerical operation between a and b, if operator is '+', '-', '*' or '/';
+     *
      * @return mathematical result, or null if uncomputable
      */
     private Long calculate(long a, char operator, long b) {
         switch (operator) {
             case '+':
-                return a+b;
+                return a + b;
             case '-':
-                return a-b;
+                return a - b;
             case '*':
-                return a*b;
+                return a * b;
             case '/':
-                return a/b;
+                return a / b;
         }
         return null;
     }
