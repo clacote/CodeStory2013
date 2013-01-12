@@ -1,43 +1,40 @@
 package com.ninja_squad.codestory.scalaskel;
 
-import com.google.common.collect.Collections2;
-import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 
-import java.util.*;
+import java.util.Map;
+import java.util.Set;
 
 public class ChangeComputer {
 
-    private static final Collection<List<Unite>> PERMUTATIONS = Collections2.permutations(EnumSet.allOf(Unite.class));
-
     public Set<Map<Unite, Integer>> change(final int sum) {
+        Map<Unite, Integer> current = Maps.newEnumMap(Unite.class);
+        return change(sum, current);
+    }
+
+
+    public Set<Map<Unite, Integer>> change(final int sum, Map<Unite, Integer> candidate) {
         Set<Map<Unite, Integer>> result = Sets.newHashSet();
 
-        Map<Unite, Integer> possibleChange = Maps.newEnumMap(Unite.class);
-        for (List<Unite> unites : PERMUTATIONS) {
-            int remaining = sum;
+        for (Unite unite : Unite.values()) {
+            int remaining = sum - unite.getValue();
+            if (remaining >= 0) {
+                // We could use one more of this unit
+                Map<Unite, Integer> nextCandidates = Maps.newHashMap(candidate);
+                int nb = candidate.get(unite) != null ? candidate.get(unite) : 0;
+                nextCandidates.put(unite, nb + 1);
 
-            for (Unite unite : unites) {
-                if (remaining >= unite.getValue()) {
-                    int nb = remaining / unite.getValue();
-                    if (nb > 0) {
-                        possibleChange.put(unite, nb);
-                        remaining %= unite.getValue();
-                    }
+                if (remaining == 0) {
+                    // Valid change
+                    result.add(nextCandidates);
+                } else {
+                    // Keep looking
+                    result.addAll(change(remaining, nextCandidates));
                 }
             }
-
-            // Is it a valid change?
-            if (remaining == 0) {
-                // Valid change
-                result.add(ImmutableMap.copyOf(possibleChange));
-            }
-
-            // Reset possibleChange for new computation
-            possibleChange.clear();
-
         }
+
         return result;
     }
 
