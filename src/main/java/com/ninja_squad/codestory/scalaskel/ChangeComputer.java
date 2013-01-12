@@ -3,6 +3,7 @@ package com.ninja_squad.codestory.scalaskel;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 
+import java.util.EnumSet;
 import java.util.Map;
 import java.util.Set;
 
@@ -10,25 +11,29 @@ public class ChangeComputer {
 
     public Set<Map<Unite, Integer>> change(final int sum) {
         Set<Map<Unite, Integer>> results = Sets.newHashSet();
-        change(sum, new int[Unite.values().length], results);
+        change(sum, new int[Unite.values().length], EnumSet.allOf(Unite.class), results);
         return results;
     }
 
-    public void change(final int sum, int[] candidate, Set<Map<Unite, Integer>> results) {
+    public void change(final int sum, int[] current, Set<Unite> candidate, Set<Map<Unite, Integer>> results) {
 
         if (sum == 0) {
-            results.add(cleanCopy(candidate));
+            results.add(cleanCopy(current));
         } else {
 
-            for (Unite unite : Unite.values()) {
+            Set<Unite> nextCandidate = EnumSet.copyOf(candidate);
+            for (Unite unite : nextCandidate) {
                 int remaining = sum - unite.getValue();
 
                 if (remaining >= 0) {
                     // We could use one more of this unit
-                    candidate[unite.ordinal()]++;
-                    change(remaining, candidate, results);
-                    candidate[unite.ordinal()]--;
+                    current[unite.ordinal()]++;
+                    change(remaining, current, nextCandidate, results);
+                    current[unite.ordinal()]--;
+                } else {
+                    break;
                 }
+                nextCandidate.remove(unite);
             }
         }
     }

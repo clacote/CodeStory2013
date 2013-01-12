@@ -32,4 +32,10 @@ public class ChangeComputerTest {
                 ImmutableMap.of(Unite.foo, 1, Unite.bar, 1, Unite.qix, 1)
         );
     }
+
+    @Test
+    public void change97() throws Exception {
+        assertThat(computer.change(97)).contains(ImmutableMap.of(Unite.foo, 97));
+        assertThat(computer.change(97)).hasSize(162);
+    }
 }
