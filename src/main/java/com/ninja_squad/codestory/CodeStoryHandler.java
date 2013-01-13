@@ -5,24 +5,18 @@ import com.google.common.base.Charsets;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.io.CharStreams;
 import com.google.common.io.InputSupplier;
+import com.ninja_squad.codestory.calculator.Calculator;
 import com.ninja_squad.codestory.scalaskel.ChangeComputer;
 import com.ninja_squad.codestory.scalaskel.Unite;
 import com.sun.net.httpserver.Headers;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
-import groovy.lang.Binding;
-import groovy.lang.GroovyRuntimeException;
-import groovy.lang.GroovyShell;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.net.HttpURLConnection;
-import java.text.DecimalFormat;
-import java.text.DecimalFormatSymbols;
-import java.text.NumberFormat;
-import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 import java.util.regex.Matcher;
@@ -169,27 +163,7 @@ public class CodeStoryHandler implements HttpHandler {
             .put("As+tu+bien+recu+le+premier+enonce(OUI/NON)", "OUI")
             .build();
 
-
     private String calculate(final String query) {
-        String result = null;
-
-        // query is in French LOCALE
-        String formattedQuery = query.replace(',', '.');
-
-        GroovyShell shell = new GroovyShell(new Binding());
-        try {
-            Object value = shell.evaluate(formattedQuery);
-            if (value != null) {
-                result = getNumberFormat().format(value);
-            }
-        } catch (GroovyRuntimeException e) {
-            // Invalid expression
-        }
-        return result;
-    }
-
-    private NumberFormat getNumberFormat() {
-        DecimalFormatSymbols dfs = new DecimalFormatSymbols(Locale.FRENCH);
-        return new DecimalFormat("0.##", dfs);
+        return new Calculator().calculate(query);
     }
 }
