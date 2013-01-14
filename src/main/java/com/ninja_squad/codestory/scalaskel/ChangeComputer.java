@@ -15,7 +15,7 @@ public class ChangeComputer {
         return results;
     }
 
-    public void change(final int sum, int[] current, Set<Unite> candidate, Set<Map<Unite, Integer>> results) {
+    private void change(final int sum, int[] current, Set<Unite> candidate, Set<Map<Unite, Integer>> results) {
 
         if (sum == 0) {
             results.add(cleanCopy(current));

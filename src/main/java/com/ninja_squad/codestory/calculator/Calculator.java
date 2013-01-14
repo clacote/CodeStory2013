@@ -39,12 +39,12 @@ public class Calculator {
     }
 
     @VisibleForTesting
-    protected String manageFrenchLocale(String query) {
+    String manageFrenchLocale(String query) {
         return query.replace(',', '.');
     }
 
     @VisibleForTesting
-    protected String format(Object value) {
+    String format(Object value) {
         return getNumberFormat().format(value);
     }
 

@@ -7,7 +7,7 @@ public enum Unite {
     qix(11),
     baz(21);
 
-    private int value;
+    private final int value;
 
     private Unite(int value) {
         this.value = value;

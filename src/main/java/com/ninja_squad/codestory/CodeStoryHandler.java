@@ -78,9 +78,7 @@ public class CodeStoryHandler implements HttpHandler {
 
         String query = exchange.getRequestURI().getQuery();
         if (query != null && !query.isEmpty()) {
-            StringBuilder paramRegex = new StringBuilder(name)
-                    .append("=([^&]+)");
-            Pattern pattern = Pattern.compile(paramRegex.toString());
+            Pattern pattern = Pattern.compile(name + "=([^&]+)");
             Matcher matcher = pattern.matcher(query);
             if (matcher.matches()) {
                 value = matcher.group(1);
