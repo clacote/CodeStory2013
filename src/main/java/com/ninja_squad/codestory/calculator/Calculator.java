@@ -1,15 +1,14 @@
 package com.ninja_squad.codestory.calculator;
 
 import com.google.common.annotations.VisibleForTesting;
-import groovy.lang.Binding;
 import groovy.lang.GroovyRuntimeException;
 import groovy.lang.GroovyShell;
 
+import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.text.NumberFormat;
 import java.util.Locale;
-import java.util.regex.Pattern;
 
 public class Calculator {
 
@@ -18,11 +17,11 @@ public class Calculator {
 
         String preparedQuery = prepare(query);
 
-        GroovyShell shell = new GroovyShell(new Binding());
+        GroovyShell shell = new GroovyShell();
         try {
-            Object value = shell.evaluate(preparedQuery);
-            if (value != null) {
-                result = getNumberFormat().format(value);
+            BigDecimal bd = (BigDecimal) shell.evaluate(preparedQuery);
+            if (bd != null) {
+                result = format(bd);
             }
         } catch (GroovyRuntimeException e) {
             // Invalid expression
@@ -37,7 +36,7 @@ public class Calculator {
         // query might be in French LOCALE
         preparedQuery = manageFrenchLocale(preparedQuery);
 
-        // Set numeric litterals as Groovy BigDecimals
+        // Force Groovy to return a BigDecimal instead of (fucking rounded) Double
         preparedQuery = manageBigDecimal(preparedQuery);
 
         return preparedQuery;
@@ -48,15 +47,22 @@ public class Calculator {
         return query.replace(',', '.');
     }
 
-    private static final Pattern NUMBER_PATTERN = Pattern.compile("[0-9\\.]+");
+    @VisibleForTesting
+    protected String manageBigDecimal(String query) {
+        return new StringBuilder()
+                .append(query)
+                .append(" as BigDecimal")
+                .toString();
+    }
 
     @VisibleForTesting
-    protected String manageBigDecimal(String preparedQuery) {
-        return preparedQuery;
+    protected String format(BigDecimal bd) {
+        return getNumberFormat().format(bd);
     }
 
     private NumberFormat getNumberFormat() {
         DecimalFormatSymbols dfs = new DecimalFormatSymbols(Locale.FRENCH);
         return new DecimalFormat("0.##", dfs);
     }
+
 }
