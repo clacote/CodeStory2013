@@ -71,6 +71,12 @@ public class CodeStoryTest {
     }
 
     @Test
+    public void ndeloof() throws Exception {
+        final String answer = ask("q=As+tu+copie+le+code+de+ndeloof(OUI/NON/JE_SUIS_NICOLAS)");
+        assertThat(answer).isEqualTo("NON");
+    }
+
+    @Test
     public void unPlusUn() throws Exception {
         final String answer = ask("q=1+1");
         assertThat(answer).isEqualTo("2");
