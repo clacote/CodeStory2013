@@ -65,6 +65,12 @@ public class CodeStoryTest {
     }
 
     @Test
+    public void secondEnonce() throws Exception {
+        final String answer = ask("q=As+tu+bien+recu+le+second+enonce(OUI/NON)");
+        assertThat(answer).isEqualTo("OUI");
+    }
+
+    @Test
     public void unPlusUn() throws Exception {
         final String answer = ask("q=1+1");
         assertThat(answer).isEqualTo("2");

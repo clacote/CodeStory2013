@@ -160,6 +160,7 @@ public class CodeStoryHandler implements HttpHandler {
             .put("Est+ce+que+tu+reponds+toujours+oui(OUI/NON)", "NON")
             .put("As+tu+bien+recu+le+premier+enonce(OUI/NON)", "OUI")
             .put("As+tu+passe+une+bonne+nuit+malgre+les+bugs+de+l+etape+precedente(PAS_TOP/BOF/QUELS_BUGS)", "PAS_TOP")
+            .put("As+tu+bien+recu+le+second+enonce(OUI/NON)", "OUI")
             .build();
 
     private String calculate(final String query) {
