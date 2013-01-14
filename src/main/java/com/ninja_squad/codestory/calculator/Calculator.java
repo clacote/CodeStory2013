@@ -4,7 +4,6 @@ import com.google.common.annotations.VisibleForTesting;
 import groovy.lang.GroovyRuntimeException;
 import groovy.lang.GroovyShell;
 
-import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.text.NumberFormat;
@@ -19,9 +18,9 @@ public class Calculator {
 
         GroovyShell shell = new GroovyShell();
         try {
-            BigDecimal bd = (BigDecimal) shell.evaluate(preparedQuery);
-            if (bd != null) {
-                result = format(bd);
+            Object value = shell.evaluate(preparedQuery);
+            if (value != null) {
+                result = format(value);
             }
         } catch (GroovyRuntimeException e) {
             // Invalid expression
@@ -36,9 +35,6 @@ public class Calculator {
         // query might be in French LOCALE
         preparedQuery = manageFrenchLocale(preparedQuery);
 
-        // Force Groovy to return a BigDecimal instead of (fucking rounded) Double
-        preparedQuery = manageBigDecimal(preparedQuery);
-
         return preparedQuery;
     }
 
@@ -48,21 +44,12 @@ public class Calculator {
     }
 
     @VisibleForTesting
-    protected String manageBigDecimal(String query) {
-        return new StringBuilder()
-                .append(query)
-                .append(" as BigDecimal")
-                .toString();
-    }
-
-    @VisibleForTesting
-    protected String format(BigDecimal bd) {
-        return getNumberFormat().format(bd);
+    protected String format(Object value) {
+        return getNumberFormat().format(value);
     }
 
     private NumberFormat getNumberFormat() {
-        DecimalFormatSymbols dfs = new DecimalFormatSymbols(Locale.FRENCH);
-        return new DecimalFormat("0.##", dfs);
+        return new DecimalFormat("0.##", new DecimalFormatSymbols(Locale.FRENCH));
     }
 
 }
