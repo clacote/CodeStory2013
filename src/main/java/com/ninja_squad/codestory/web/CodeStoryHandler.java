@@ -117,7 +117,7 @@ public class CodeStoryHandler implements HttpHandler {
             // Log sent response
             System.out.println(response);
 
-            responseCode = HttpURLConnection.HTTP_OK;
+            // responseCode = HttpURLConnection.HTTP_OK;
         }
 
         sendResponse(exchange, response, responseCode);
