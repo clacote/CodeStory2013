@@ -54,6 +54,6 @@ public class Planning implements Comparable<Planning> {
 
     @Override
     public int compareTo(Planning o) {
-        return Integer.compare(getGain(), o.getGain());
+        return Integer.valueOf(getGain()).compareTo(Integer.valueOf(o.getGain()));
     }
 }
