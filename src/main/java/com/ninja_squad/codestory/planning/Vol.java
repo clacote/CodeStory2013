@@ -1,5 +1,7 @@
 package com.ninja_squad.codestory.planning;
 
+import com.google.common.base.Objects;
+
 public class Vol {
 
     private String nom;
@@ -60,13 +62,14 @@ public class Vol {
 
         Vol vol = (Vol) o;
 
-        if (!nom.equals(vol.nom)) return false;
-
-        return true;
+        return Objects.equal(this.nom, vol.nom) &&
+                Objects.equal(this.depart, vol.depart) &&
+                Objects.equal(this.duree, vol.duree) &&
+                Objects.equal(this.prix, vol.prix);
     }
 
     @Override
     public int hashCode() {
-        return nom.hashCode();
+        return Objects.hashCode(nom, depart, duree, prix);
     }
 }

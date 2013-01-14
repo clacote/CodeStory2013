@@ -154,6 +154,21 @@ public class CodeStoryTest {
     }
 
     @Test
+    public void optimize() throws Exception {
+        final String input =
+                "[\n" +
+                        "  {\"VOL\": \"AF514\", \"DEPART\":0, \"DUREE\":5, \"PRIX\": 10}\n" +
+                        "\n" +
+                        "]";
+        final String response = Request.Post(getURL("/jajascript/optimize"))
+                .bodyString(input, ContentType.TEXT_PLAIN)
+                .execute()
+                .returnContent()
+                .asString();
+        assertThat(response).isNotEmpty();
+    }
+
+    @Test
     public void post() throws Exception {
         final HttpResponse response = Request.Post(getURL("/?q"))
                 .bodyString("Une question Markdown", ContentType.TEXT_PLAIN)

@@ -1,11 +1,15 @@
-package com.ninja_squad.codestory;
+package com.ninja_squad.codestory.web;
 
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Charsets;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.io.CharStreams;
 import com.google.common.io.InputSupplier;
+import com.ninja_squad.codestory.JSON;
 import com.ninja_squad.codestory.calculator.Calculator;
+import com.ninja_squad.codestory.planning.Optimisator;
+import com.ninja_squad.codestory.planning.Planning;
+import com.ninja_squad.codestory.planning.Vol;
 import com.ninja_squad.codestory.scalaskel.ChangeComputer;
 import com.ninja_squad.codestory.scalaskel.Unite;
 import com.sun.net.httpserver.Headers;
@@ -88,6 +92,8 @@ public class CodeStoryHandler implements HttpHandler {
     }
 
     private void doPost(final HttpExchange exchange) throws IOException {
+        String path = exchange.getRequestURI().getPath();
+        int responseCode = HttpURLConnection.HTTP_CREATED;
 
         InputSupplier<? extends InputStream> supplier = new InputSupplier<InputStream>() {
             @Override
@@ -97,10 +103,24 @@ public class CodeStoryHandler implements HttpHandler {
         };
         String requestBody = CharStreams.toString(CharStreams.newReaderSupplier(supplier, Charsets.UTF_8));
 
-        // Write received body
+        // Log received body
         System.out.println(requestBody);
 
-        sendResponse(exchange, requestBody, HttpURLConnection.HTTP_CREATED);
+        String response = requestBody;
+
+        // Try Optimize Jajascript
+        if (path.startsWith(OPTIMIZE_PATH)) {
+            Set<Vol> vols = JSON.toVols(requestBody);
+            Planning optimum = new Optimisator().computeOptimum(vols);
+            response = JSON.toJson(new OptimizeResponse(optimum));
+
+            // Log sent response
+            System.out.println(response);
+
+            responseCode = HttpURLConnection.HTTP_OK;
+        }
+
+        sendResponse(exchange, response, responseCode);
     }
 
     private void sendResponse(HttpExchange exchange, final String body, int statusCode) throws IOException {
@@ -138,6 +158,7 @@ public class CodeStoryHandler implements HttpHandler {
     }
 
     private static final String SCALASKEL_PATH = "/scalaskel/change/";
+    private static final String OPTIMIZE_PATH = "/jajascript/optimize";
 
     private String scalaskel(String path) {
         String result = null;
