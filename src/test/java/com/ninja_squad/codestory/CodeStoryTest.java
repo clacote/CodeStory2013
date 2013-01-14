@@ -59,6 +59,12 @@ public class CodeStoryTest {
     }
 
     @Test
+    public void bonneNuit() throws Exception {
+        final String answer = ask("q=As+tu+passe+une+bonne+nuit+malgre+les+bugs+de+l+etape+precedente(PAS_TOP/BOF/QUELS_BUGS)");
+        assertThat(answer).isEqualTo("PAS_TOP");
+    }
+
+    @Test
     public void unPlusUn() throws Exception {
         final String answer = ask("q=1+1");
         assertThat(answer).isEqualTo("2");
