@@ -165,7 +165,10 @@ public class CodeStoryTest {
                 .execute()
                 .returnContent()
                 .asString();
-        assertThat(response).isNotEmpty();
+        assertThat(response)
+                .isNotEmpty()
+                .contains("\"path\":[\"AF514\"]")
+                .contains("\"gain\":10");
     }
 
     @Test
