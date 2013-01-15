@@ -1,12 +1,17 @@
 package com.ninja_squad.codestory.planning;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.base.Objects;
 
 public class Vol {
 
+    @JsonProperty("VOL")
     private String nom;
+    @JsonProperty("DEPART")
     private int depart;
+    @JsonProperty("DUREE")
     private int duree;
+    @JsonProperty("PRIX")
     private int prix;
 
     Vol() {

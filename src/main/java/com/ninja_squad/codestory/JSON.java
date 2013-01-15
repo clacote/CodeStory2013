@@ -12,7 +12,10 @@ import java.util.Set;
  * JSON tools
  */
 public abstract class JSON {
+
     private static final ObjectMapper MAPPER = new ObjectMapper();
+    private static final TypeReference<Set<Vol>> TYPE = new TypeReference<Set<Vol>>() {
+    };
 
     public static String toJson(Object value) {
         try {
@@ -23,14 +26,8 @@ public abstract class JSON {
     }
 
     public static Set<Vol> toVols(String json) {
-        String preparedJson = json
-                .replaceAll("VOL", "nom")
-                .replaceAll("DEPART", "depart")
-                .replaceAll("DUREE", "duree")
-                .replaceAll("PRIX", "prix");
         try {
-            return MAPPER.readValue(preparedJson, new TypeReference<Set<Vol>>() {
-            });
+            return MAPPER.readValue(json, TYPE);
         } catch (JsonProcessingException e) {
             throw new RuntimeException("Unable to read JSON", e);
         } catch (IOException e) {
