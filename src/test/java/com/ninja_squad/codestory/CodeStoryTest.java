@@ -178,6 +178,38 @@ public class CodeStoryTest {
     }
 
     @Test
+    public void perfOptimize() {
+        final String json = getPlanningJSonString();
+        new Mesurator().mesure(new Mesurable() {
+            @Override
+            public void run() throws Exception {
+                Request.Post(getURL("/jajascript/optimize"))
+                        .bodyString(json, ContentType.TEXT_PLAIN)
+                        .execute()
+                        .returnContent()
+                        .asString();
+            }
+        });
+        // 15/01/2013 19H10 : Average = 2592ms.
+    }
+
+    public static String getPlanningJSonString() {
+        int i = 0;
+        return "[\n" +
+                "  {\"VOL\": \"AF51" + (i++) + "\", \"DEPART\":0, \"DUREE\":5, \"PRIX\": 10},\n" +
+                "  {\"VOL\": \"AF51" + (i++) + "\", \"DEPART\":0, \"DUREE\":5, \"PRIX\": 10},\n" +
+                "  {\"VOL\": \"AF51" + (i++) + "\", \"DEPART\":0, \"DUREE\":5, \"PRIX\": 10},\n" +
+                "  {\"VOL\": \"AF51" + (i++) + "\", \"DEPART\":0, \"DUREE\":5, \"PRIX\": 10},\n" +
+                "  {\"VOL\": \"AF51" + (i++) + "\", \"DEPART\":0, \"DUREE\":5, \"PRIX\": 10},\n" +
+                "  {\"VOL\": \"AF51" + (i++) + "\", \"DEPART\":0, \"DUREE\":5, \"PRIX\": 10},\n" +
+                "  {\"VOL\": \"AF51" + (i++) + "\", \"DEPART\":0, \"DUREE\":5, \"PRIX\": 10},\n" +
+                "  {\"VOL\": \"AF51" + (i++) + "\", \"DEPART\":0, \"DUREE\":5, \"PRIX\": 10},\n" +
+                "  {\"VOL\": \"AF51" + (i++) + "\", \"DEPART\":0, \"DUREE\":5, \"PRIX\": 10}\n" +
+                "\n" +
+                "]";
+    }
+
+    @Test
     public void post() throws Exception {
         final HttpResponse response = Request.Post(getURL("/?q"))
                 .bodyString("Une question Markdown", ContentType.TEXT_PLAIN)

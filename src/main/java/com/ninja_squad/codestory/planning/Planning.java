@@ -1,51 +1,29 @@
 package com.ninja_squad.codestory.planning;
 
-import com.google.common.base.Predicate;
-
-import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 
 public class Planning implements Comparable<Planning> {
 
-    private final List<Vol> path;
+    private final LinkedList<Vol> path;
 
-    private Integer gain;
+    private int gain = 0;
 
-    public Planning(List<Vol> path) {
-        this.path = path;
+    public Planning() {
+        path = new LinkedList<Vol>();
     }
 
-    static final Predicate<Planning> POSSIBLE = new Predicate<Planning>() {
-        @Override
-        public boolean apply(Planning input) {
-            return input.isPossible();
-        }
-    };
+    public boolean contains(Vol vol) {
+        return this.path.contains(vol);
+    }
 
-    public boolean isPossible() {
-        boolean possible = true;
-        if (path.size() > 1) {
-            Vol previous = null;
-            for (Iterator<Vol> iVol = path.iterator(); possible && iVol.hasNext(); ) {
-                Vol current = iVol.next();
-                if (previous != null) {
-                    possible = (current.getDepart() >= previous.getArrivee());
-                }
-                previous = current;
-            }
-        }
-        return possible;
+    public void addFirst(Vol vol) {
+        this.path.addFirst(vol);
+        this.gain += vol.getPrix();
     }
 
     public int getGain() {
-        if (this.gain == null) {
-            int computedGain = 0;
-            for (Vol vol : getPath()) {
-                computedGain += vol.getPrix();
-            }
-            this.gain = Integer.valueOf(computedGain);
-        }
-        return this.gain.intValue();
+        return gain;
     }
 
     public List<Vol> getPath() {
@@ -54,6 +32,6 @@ public class Planning implements Comparable<Planning> {
 
     @Override
     public int compareTo(Planning o) {
-        return Integer.valueOf(getGain()).compareTo(Integer.valueOf(o.getGain()));
+        return Integer.valueOf(getGain()).compareTo(o.getGain());
     }
 }

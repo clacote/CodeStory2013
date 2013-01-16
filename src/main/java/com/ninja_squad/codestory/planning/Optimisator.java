@@ -1,36 +1,59 @@
 package com.ninja_squad.codestory.planning;
 
-import com.google.common.base.Function;
-import com.google.common.collect.FluentIterable;
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Ordering;
-import com.google.common.collect.Sets;
 
-import java.util.List;
+import java.util.Comparator;
 import java.util.Set;
 
 public class Optimisator {
 
     public Planning computeOptimum(Set<Vol> vols) {
-        Planning result = null;
+        // Order vols by startTime
+        ImmutableList<Vol> orderedVols = Ordering.from(new Comparator<Vol>() {
+            @Override
+            public int compare(Vol v1, Vol v2) {
+                return Integer.compare(v1.getDepart(), v2.getDepart());
+            }
+        }).immutableSortedCopy(vols);
 
-        if (vols != null) {
-            final Set<Planning> allPlannings = computeAllPossibilities(vols);
-            final Set<Planning> possiblePlannings = Sets.filter(allPlannings, Planning.POSSIBLE);
-            result = Ordering.natural().max(possiblePlannings.iterator());
+        Planning best = new Planning();
+
+        for (int v = 0; v < orderedVols.size(); ++v) {
+            Vol vol = orderedVols.get(v);
+
+            // on calcule le meilleur chemin pour ce vol seulement si ce vol n'est pas déjà dans le meilleur chemin
+            if (!best.contains(vol)) {
+                Planning possible = best(v, orderedVols);
+                if (possible.compareTo(best) > 0) {
+                    best = possible;
+                }
+            }
         }
 
-        return result;
+        return best;
     }
 
-    private Set<Planning> computeAllPossibilities(Set<Vol> vols) {
-        Set<List<Vol>> possibilities = SetUtils.powerPermutations(vols);
-        return FluentIterable.from(possibilities)
-                .transform(new Function<List<Vol>, Planning>() {
-                    @Override
-                    public Planning apply(List<Vol> input) {
-                        return new Planning(input);
+    private Planning best(int startIndex, ImmutableList<Vol> vols) {
+        Planning best = null;
+
+        Vol start = vols.get(startIndex);
+        if (startIndex < vols.size() - 1) {
+            for (int v = startIndex + 1; v < vols.size(); ++v) {
+                Vol next = vols.get(v);
+                if (start.canBeFollowedBy(next)) {
+                    Planning nextBest = best(v, vols);
+                    if (best == null || nextBest.compareTo(best) > 0) {
+                        best = nextBest;
                     }
-                })
-                .toImmutableSet();
+                }
+            }
+        }
+
+        if (best == null) {
+            best = new Planning();
+        }
+        best.addFirst(start);
+        return best;
     }
 }

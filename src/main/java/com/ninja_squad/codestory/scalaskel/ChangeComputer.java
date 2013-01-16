@@ -48,7 +48,7 @@ public class ChangeComputer {
         return copy;
     }
 
-    private static ChangeComputer ourInstance = new ChangeComputer();
+    private static final ChangeComputer ourInstance = new ChangeComputer();
 
     public static ChangeComputer getInstance() {
         return ourInstance;

@@ -17,6 +17,10 @@ public class Vol {
     Vol() {
     }
 
+    public boolean canBeFollowedBy(Vol other) {
+        return other.getDepart() >= this.getArrivee();
+    }
+
     public Vol(String nom, int depart, int duree, int prix) {
         this.nom = nom;
         this.depart = depart;
@@ -67,14 +71,11 @@ public class Vol {
 
         Vol vol = (Vol) o;
 
-        return Objects.equal(this.nom, vol.nom) &&
-                Objects.equal(this.depart, vol.depart) &&
-                Objects.equal(this.duree, vol.duree) &&
-                Objects.equal(this.prix, vol.prix);
+        return Objects.equal(this.nom, vol.nom);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(nom, depart, duree, prix);
+        return Objects.hashCode(nom);
     }
 }
