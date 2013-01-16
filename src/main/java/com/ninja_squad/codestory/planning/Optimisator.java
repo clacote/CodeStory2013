@@ -8,14 +8,16 @@ import java.util.Set;
 
 public class Optimisator {
 
+    public static final Comparator<Vol> ORDERED_VOL_CMP = new Comparator<Vol>() {
+        @Override
+        public int compare(Vol v1, Vol v2) {
+            return Integer.valueOf(v1.getDepart()).compareTo(v2.getDepart());
+        }
+    };
+
     public Planning computeOptimum(Set<Vol> vols) {
         // Order vols by startTime
-        ImmutableList<Vol> orderedVols = Ordering.from(new Comparator<Vol>() {
-            @Override
-            public int compare(Vol v1, Vol v2) {
-                return Integer.compare(v1.getDepart(), v2.getDepart());
-            }
-        }).immutableSortedCopy(vols);
+        ImmutableList<Vol> orderedVols = Ordering.from(ORDERED_VOL_CMP).immutableSortedCopy(vols);
 
         Planning best = new Planning();
 
