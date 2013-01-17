@@ -43,7 +43,7 @@ public class Optimisator {
         if (startIndex < vols.size() - 1) {
             for (int v = startIndex + 1; v < vols.size(); ++v) {
                 Vol next = vols.get(v);
-                if (start.canBeFollowedBy(next)) {
+                if (start.canBeFollowedBy(next) && (best == null || !best.contains(next))) {
                     Planning nextBest = best(v, vols);
                     if (best == null || nextBest.compareTo(best) > 0) {
                         best = nextBest;
