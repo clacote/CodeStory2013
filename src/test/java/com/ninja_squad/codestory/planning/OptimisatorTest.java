@@ -35,8 +35,34 @@ public class OptimisatorTest {
     }
 
     @Test
+    public void computeOptimumIsFirstAlone() throws Exception {
+
+        final Set<Vol> vols = Sets.newHashSet(
+                new Vol("TEST0", 0, 6, 10),
+                new Vol("TEST1", 0, 5, 4),
+                new Vol("TEST2", 5, 10, 4)
+        );
+        final Planning optimum = optimisator.computeOptimum(vols);
+        assertThat(optimum.getPath()).onProperty("nom").isEqualTo(Lists.newArrayList("TEST0"));
+        assertThat(optimum.getGain()).isEqualTo(10);
+    }
+
+    @Test
+    public void computeOptimumIsLastAlone() throws Exception {
+
+        final Set<Vol> vols = Sets.newHashSet(
+                new Vol("TEST1", 0, 5, 4),
+                new Vol("TEST2", 5, 10, 4),
+                new Vol("TEST3", 0, 6, 10)
+        );
+        final Planning optimum = optimisator.computeOptimum(vols);
+        assertThat(optimum.getPath()).onProperty("nom").isEqualTo(Lists.newArrayList("TEST3"));
+        assertThat(optimum.getGain()).isEqualTo(10);
+    }
+
+    @Test
     public void perf() {
-        final Set<Vol> vols = createRandom(50);
+        final Set<Vol> vols = createRandom(100);
         new Mesurator().mesure(new Mesurable() {
             @Override
             public void run() throws Exception {
@@ -44,15 +70,17 @@ public class OptimisatorTest {
             }
         });
 
-        // 17/01/2013 23H10 : Average = 2537ms.
-        // 17/01/2013 23H15 : Average = 600ms.
+        // 19/01/2013 02H00 : Average = 2800ms.
+        // 19/01/2013 02H30 : Average = 10ms.
     }
 
     private Set<Vol> createRandom(final int nb) {
         Random random = new Random();
         final Set<Vol> vols = Sets.newHashSetWithExpectedSize(nb);
         for (int i = 0; i < nb; i++) {
-            vols.add(new Vol("vol" + i, random.nextInt(24), random.nextInt(5), random.nextInt(10)));
+            int start = random.nextInt(24);
+            int duree = random.nextInt(24 - start);
+            vols.add(new Vol("vol" + i, start, duree, random.nextInt(10)));
         }
         return vols;
     }

@@ -2,7 +2,7 @@ package com.ninja_squad.codestory;
 
 public class Mesurator {
 
-    private int nb = 10;
+    private int nb = 5;
 
     public Mesurator() {
     }

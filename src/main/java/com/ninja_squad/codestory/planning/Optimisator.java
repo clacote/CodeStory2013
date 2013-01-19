@@ -1,9 +1,11 @@
 package com.ninja_squad.codestory.planning;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Maps;
 import com.google.common.collect.Ordering;
 
 import java.util.Comparator;
+import java.util.Map;
 import java.util.Set;
 
 public class Optimisator {
@@ -16,18 +18,20 @@ public class Optimisator {
     };
 
     public Planning computeOptimum(Set<Vol> vols) {
+
         // Order vols by startTime
         ImmutableList<Vol> orderedVols = Ordering.from(ORDERED_VOL_CMP).immutableSortedCopy(vols);
 
-        Planning best = new Planning();
+        Planning best = null;
+        Map<Integer, Planning> bestCache = Maps.newHashMapWithExpectedSize(vols.size());
 
         for (int v = 0; v < orderedVols.size(); ++v) {
             Vol vol = orderedVols.get(v);
 
             // on calcule le meilleur chemin pour ce vol seulement si ce vol n'est pas déjà dans le meilleur chemin
-            if (!best.contains(vol)) {
-                Planning possible = best(v, orderedVols);
-                if (possible.compareTo(best) > 0) {
+            if (best == null || !best.contains(vol)) {
+                Planning possible = best(orderedVols, v, bestCache);
+                if (best == null || possible.compareTo(best) > 0) {
                     best = possible;
                 }
             }
@@ -36,15 +40,16 @@ public class Optimisator {
         return best;
     }
 
-    private Planning best(int startIndex, ImmutableList<Vol> vols) {
-        Planning best = null;
+    private Planning best(ImmutableList<Vol> vols, int startIndex, Map<Integer, Planning> bestCache) {
+        Planning best = bestCache.get(Integer.valueOf(startIndex));
+        if (best != null) return best;
 
         Vol start = vols.get(startIndex);
         if (startIndex < vols.size() - 1) {
             for (int v = startIndex + 1; v < vols.size(); ++v) {
                 Vol next = vols.get(v);
                 if (start.canBeFollowedBy(next) && (best == null || !best.contains(next))) {
-                    Planning nextBest = best(v, vols);
+                    Planning nextBest = best(vols, v, bestCache);
                     if (best == null || nextBest.compareTo(best) > 0) {
                         best = nextBest;
                     }
@@ -53,9 +58,13 @@ public class Optimisator {
         }
 
         if (best == null) {
-            best = new Planning();
+            best = new Planning(start);
+        } else {
+            best = new Planning(start, best);
         }
-        best.addFirst(start);
+
+        bestCache.put(Integer.valueOf(startIndex), best);
+
         return best;
     }
 }
