@@ -23,22 +23,19 @@ public class Optimisator {
 
     public Planning computeOptimum(List<Vol> vols) {
 
+        // Sort vols by start date
         Collections.sort(vols, ORDERED_VOL_CMP);
-        LinkedList<Integer> usedStartHours = new LinkedList<Integer>();
-        int previous = -1;
-        for (Vol v : vols) {
-            if (previous != v.getDepart()) {
-                usedStartHours.addLast(v.getDepart());
-            }
-            previous = v.getDepart();
-        }
 
         // Map des meilleurs plannings par heure de départ
-        Map<Integer, Planning> bests = Maps.newHashMapWithExpectedSize(usedStartHours.size());
+        Map<Integer, Planning> bests = Maps.newHashMap();
+
+        // Liste des heures de départ effectives
+        LinkedList<Integer> usedStartHours = new LinkedList<Integer>();
 
         // Iterate over vols (from later to sooner)
         // and compute best planning starting from each
         Planning best = null;
+
         for (int v = vols.size() - 1; v >= 0; --v) {
             Vol current = vols.get(v);
             // Find best next following departure
@@ -56,6 +53,11 @@ public class Optimisator {
             }
 
             bests.put(current.getDepart(), best);
+
+            // Manage used start hours
+            if (usedStartHours.isEmpty() || !(usedStartHours.getFirst().intValue() == current.getDepart())) {
+                usedStartHours.addFirst(current.getDepart());
+            }
         }
 
         return best;

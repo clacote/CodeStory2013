@@ -94,7 +94,7 @@ public class OptimisatorTest {
 
     @Test
     public void perf() {
-        final List<Vol> vols = createRandom(50000);
+        final List<Vol> vols = createRandom(24, 50000);
         new Mesurator().mesure(new Mesurable() {
             @Override
             public void run() throws Exception {
@@ -103,14 +103,15 @@ public class OptimisatorTest {
         });
 
         // 23/01/2013 04H00 : Average = 250ms pour 10000 vols.
+        // 23/01/2013 22H00 : Average = 150ms pour 10000 vols, 3000ms pour 50000 vols.
     }
 
-    private List<Vol> createRandom(final int nb) {
+    private List<Vol> createRandom(final int length, final int nb) {
         Random random = new Random();
         final List<Vol> vols = Lists.newArrayListWithExpectedSize(nb);
         for (int i = 0; i < nb; i++) {
-            int start = random.nextInt(24);
-            int duree = random.nextInt(24 - start);
+            int start = random.nextInt(length);
+            int duree = random.nextInt(24);
             vols.add(new Vol("vol" + i, start, duree, random.nextInt(10)));
         }
         return vols;
