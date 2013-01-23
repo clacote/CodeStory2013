@@ -62,7 +62,7 @@ public class OptimisatorTest {
 
     @Test
     public void perf() {
-        final Set<Vol> vols = createRandom(100);
+        final Set<Vol> vols = createRandom(10000);
         new Mesurator().mesure(new Mesurable() {
             @Override
             public void run() throws Exception {
@@ -70,8 +70,7 @@ public class OptimisatorTest {
             }
         });
 
-        // 19/01/2013 02H00 : Average = 2800ms.
-        // 19/01/2013 02H30 : Average = 10ms.
+        // 23/01/2013 04H00 : Average = 250ms pour 10000 vols.
     }
 
     private Set<Vol> createRandom(final int nb) {
