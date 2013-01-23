@@ -1,7 +1,6 @@
 package com.ninja_squad.codestory.planning;
 
-import com.google.common.base.Function;
-import com.google.common.collect.Maps;
+import org.apache.commons.collections.map.LRUMap;
 
 import java.util.*;
 
@@ -14,20 +13,13 @@ public class Optimisator {
         }
     };
 
-    private static final Function<Vol, Integer> VOL_START_HOUR = new Function<Vol, Integer>() {
-        @Override
-        public Integer apply(Vol input) {
-            return input.getDepart();
-        }
-    };
-
     public Planning computeOptimum(List<Vol> vols) {
 
         // Sort vols by start date
         Collections.sort(vols, ORDERED_VOL_CMP);
 
         // Map des meilleurs plannings par heure de départ
-        Map<Integer, Planning> bests = Maps.newHashMap();
+        Map<Integer, Planning> bests = new LRUMap(getMaxDureeVol(vols));
 
         // Liste des heures de départ effectives
         LinkedList<Integer> usedStartHours = new LinkedList<Integer>();
@@ -61,6 +53,10 @@ public class Optimisator {
         }
 
         return best;
+    }
+
+    private int getMaxDureeVol(List<Vol> vols) {
+        return 24;
     }
 
     private int findNextDeparture(int sooner, List<Integer> startHours) {
