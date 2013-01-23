@@ -6,7 +6,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ninja_squad.codestory.planning.Vol;
 
 import java.io.IOException;
-import java.util.Set;
+import java.util.List;
 
 /**
  * JSON tools
@@ -14,7 +14,7 @@ import java.util.Set;
 public abstract class JSON {
 
     private static final ObjectMapper MAPPER = new ObjectMapper();
-    private static final TypeReference<Set<Vol>> TYPE = new TypeReference<Set<Vol>>() {
+    private static final TypeReference<List<Vol>> TYPE = new TypeReference<List<Vol>>() {
     };
 
     public static String toJson(Object value) {
@@ -25,7 +25,7 @@ public abstract class JSON {
         }
     }
 
-    public static Set<Vol> toVols(String json) {
+    public static List<Vol> toVols(String json) {
         try {
             return MAPPER.readValue(json, TYPE);
         } catch (JsonProcessingException e) {

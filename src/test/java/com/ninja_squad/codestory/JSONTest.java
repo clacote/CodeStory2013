@@ -3,7 +3,7 @@ package com.ninja_squad.codestory;
 import com.ninja_squad.codestory.planning.Vol;
 import org.junit.Test;
 
-import java.util.Set;
+import java.util.List;
 
 import static org.fest.assertions.Assertions.assertThat;
 
@@ -15,7 +15,7 @@ public class JSONTest {
                 "  {\"VOL\": \"AF514\", \"DEPART\":0, \"DUREE\":5, \"PRIX\": 10}\n" +
                 "\n" +
                 "]";
-        final Set<Vol> vols = JSON.toVols(json);
+        final List<Vol> vols = JSON.toVols(json);
         assertThat(vols)
                 .hasSize(1)
                 .containsOnly(new Vol("AF514", 0, 5, 10));

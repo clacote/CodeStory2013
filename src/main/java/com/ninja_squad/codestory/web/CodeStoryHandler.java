@@ -21,6 +21,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.net.HttpURLConnection;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.regex.Matcher;
@@ -110,7 +111,7 @@ public class CodeStoryHandler implements HttpHandler {
 
         // Try Optimize Jajascript
         if (path.startsWith(OPTIMIZE_PATH)) {
-            Set<Vol> vols = JSON.toVols(requestBody);
+            List<Vol> vols = JSON.toVols(requestBody);
             Planning optimum = new Optimisator().computeOptimum(vols);
             response = JSON.toJson(new OptimizeResponse(optimum));
 

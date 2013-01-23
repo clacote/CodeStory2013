@@ -1,13 +1,12 @@
 package com.ninja_squad.codestory.planning;
 
 import com.google.common.collect.Lists;
-import com.google.common.collect.Sets;
 import com.ninja_squad.codestory.Mesurable;
 import com.ninja_squad.codestory.Mesurator;
 import org.junit.Test;
 
+import java.util.List;
 import java.util.Random;
-import java.util.Set;
 
 import static org.fest.assertions.Assertions.assertThat;
 
@@ -18,7 +17,7 @@ public class OptimisatorTest {
     @Test
     public void computeOptimum() throws Exception {
 
-        final Set<Vol> vols = Sets.newHashSet(
+        final List<Vol> vols = Lists.newArrayList(
                 new Vol("TEST0", 0, 5, 2),
                 new Vol("MONAD42", 0, 5, 10),
                 new Vol("META18", 3, 7, 14),
@@ -37,7 +36,7 @@ public class OptimisatorTest {
     @Test
     public void computeOptimumIsFirstAlone() throws Exception {
 
-        final Set<Vol> vols = Sets.newHashSet(
+        final List<Vol> vols = Lists.newArrayList(
                 new Vol("TEST0", 0, 6, 10),
                 new Vol("TEST1", 0, 5, 4),
                 new Vol("TEST2", 5, 10, 4)
@@ -50,10 +49,10 @@ public class OptimisatorTest {
     @Test
     public void computeOptimumIsLastAlone() throws Exception {
 
-        final Set<Vol> vols = Sets.newHashSet(
+        final List<Vol> vols = Lists.newArrayList(
                 new Vol("TEST1", 0, 5, 4),
-                new Vol("TEST2", 5, 10, 4),
-                new Vol("TEST3", 0, 6, 10)
+                new Vol("TEST2", 3, 10, 4),
+                new Vol("TEST3", 4, 6, 10)
         );
         final Planning optimum = optimisator.computeOptimum(vols);
         assertThat(optimum.getPath()).onProperty("nom").isEqualTo(Lists.newArrayList("TEST3"));
@@ -63,20 +62,20 @@ public class OptimisatorTest {
     @Test
     public void computeOptimumIsNotLastAlone() throws Exception {
 
-        final Set<Vol> vols = Sets.newHashSet(
+        final List<Vol> vols = Lists.newArrayList(
                 new Vol("TEST1", 0, 5, 5),
                 new Vol("TEST2", 5, 10, 6),
-                new Vol("TEST3", 0, 6, 10)
+                new Vol("TEST3", 6, 6, 10)
         );
         final Planning optimum = optimisator.computeOptimum(vols);
-        assertThat(optimum.getPath()).onProperty("nom").isEqualTo(Lists.newArrayList("TEST1", "TEST2"));
-        assertThat(optimum.getGain()).isEqualTo(11);
+        assertThat(optimum.getPath()).onProperty("nom").isEqualTo(Lists.newArrayList("TEST1", "TEST3"));
+        assertThat(optimum.getGain()).isEqualTo(15);
     }
 
     @Test
     public void computeReal() throws Exception {
 
-        final Set<Vol> vols = Sets.newHashSet(
+        final List<Vol> vols = Lists.newArrayList(
                 new Vol("voiceless-regime-17", 0, 4, 13),
                 new Vol("brainy-ufo-15", 1, 2, 1),
                 new Vol("mushy-landscape-94", 2, 6, 1),
@@ -95,7 +94,7 @@ public class OptimisatorTest {
 
     @Test
     public void perf() {
-        final Set<Vol> vols = createRandom(10000);
+        final List<Vol> vols = createRandom(10000);
         new Mesurator().mesure(new Mesurable() {
             @Override
             public void run() throws Exception {
@@ -106,9 +105,9 @@ public class OptimisatorTest {
         // 23/01/2013 04H00 : Average = 250ms pour 10000 vols.
     }
 
-    private Set<Vol> createRandom(final int nb) {
+    private List<Vol> createRandom(final int nb) {
         Random random = new Random();
-        final Set<Vol> vols = Sets.newHashSetWithExpectedSize(nb);
+        final List<Vol> vols = Lists.newArrayListWithExpectedSize(nb);
         for (int i = 0; i < nb; i++) {
             int start = random.nextInt(24);
             int duree = random.nextInt(24 - start);
