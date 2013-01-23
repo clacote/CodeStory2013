@@ -7,7 +7,7 @@ import static org.fest.assertions.Assertions.assertThat;
 
 public class ChangeComputerTest {
 
-    private ChangeComputer computer = ChangeComputer.getInstance();
+    private final ChangeComputer computer = ChangeComputer.getInstance();
 
     @Test
     public void change1() throws Exception {

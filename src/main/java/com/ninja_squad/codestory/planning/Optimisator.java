@@ -49,7 +49,7 @@ public class Optimisator {
                 best = bestForVol;
             }
 
-            bests.put(current.getDepart(), bestForVol);
+            bests.put(current.getDepart(), best);
         }
 
         return best;

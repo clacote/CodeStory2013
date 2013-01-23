@@ -11,7 +11,7 @@ import static org.fest.assertions.Assertions.assertThat;
  */
 public class CalculatorTest {
 
-    private Calculator calculator = new Calculator();
+    private final Calculator calculator = new Calculator();
 
     @Test
     public void testCalculate() throws Exception {

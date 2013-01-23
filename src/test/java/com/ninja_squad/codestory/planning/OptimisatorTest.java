@@ -61,6 +61,39 @@ public class OptimisatorTest {
     }
 
     @Test
+    public void computeOptimumIsNotLastAlone() throws Exception {
+
+        final Set<Vol> vols = Sets.newHashSet(
+                new Vol("TEST1", 0, 5, 5),
+                new Vol("TEST2", 5, 10, 6),
+                new Vol("TEST3", 0, 6, 10)
+        );
+        final Planning optimum = optimisator.computeOptimum(vols);
+        assertThat(optimum.getPath()).onProperty("nom").isEqualTo(Lists.newArrayList("TEST1", "TEST2"));
+        assertThat(optimum.getGain()).isEqualTo(11);
+    }
+
+    @Test
+    public void computeReal() throws Exception {
+
+        final Set<Vol> vols = Sets.newHashSet(
+                new Vol("voiceless-regime-17", 0, 4, 13),
+                new Vol("brainy-ufo-15", 1, 2, 1),
+                new Vol("mushy-landscape-94", 2, 6, 1),
+                new Vol("calm-keystroke-35", 4, 5, 7),
+                new Vol("proud-thunderstorm-91", 5, 2, 2),
+                new Vol("misty-puzzle-15", 5, 4, 14),
+                new Vol("wild-tugboat-98", 6, 2, 5),
+                new Vol("grumpy-cane-60", 7, 6, 6),
+                new Vol("dull-summertime-36", 9, 5, 4),
+                new Vol("soft-beige-12", 10, 2, 25)
+        );
+        final Planning optimum = optimisator.computeOptimum(vols);
+        assertThat(optimum.getPath()).onProperty("nom").isEqualTo(Lists.newArrayList("voiceless-regime-17", "misty-puzzle-15", "soft-beige-12"));
+        assertThat(optimum.getGain()).isEqualTo(52);
+    }
+
+    @Test
     public void perf() {
         final Set<Vol> vols = createRandom(10000);
         new Mesurator().mesure(new Mesurable() {
