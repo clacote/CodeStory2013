@@ -49,7 +49,7 @@ public class Calculator {
     }
 
     private NumberFormat getNumberFormat() {
-        return new DecimalFormat("0.##", new DecimalFormatSymbols(Locale.FRENCH));
+        return new DecimalFormat("0.############################################################################################################", new DecimalFormatSymbols(Locale.FRENCH));
     }
 
 }

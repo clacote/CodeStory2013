@@ -25,6 +25,13 @@ public class CalculatorTest {
                 "31878018903828899277492024491376690701584023926880");
     }
 
+    @Test
+    public void testCalculate_big2() {
+        assertCalculation(
+                "1,0000000000000000000000000000000000000000000000001*1,0000000000000000000000000000000000000000000000001",
+                "1,00000000000000000000000000000000000000000000000020000000000000000000000000000000000000000000000001");
+    }
+
     private void assertCalculation(final String query, final String expectedResult) {
         final String result = calculator.calculate(query);
         assertThat(result).isEqualTo(expectedResult);
