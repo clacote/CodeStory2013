@@ -94,7 +94,7 @@ public class OptimisatorTest {
 
     @Test
     public void perf() {
-        final List<Vol> vols = createRandom(10000);
+        final List<Vol> vols = createRandom(50000);
         new Mesurator().mesure(new Mesurable() {
             @Override
             public void run() throws Exception {
