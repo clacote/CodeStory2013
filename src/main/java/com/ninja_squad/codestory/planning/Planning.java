@@ -6,29 +6,15 @@ import java.util.List;
 /**
  * Immutable planning, i.e list of possible {@link Vol}
  */
-public class Planning implements Comparable<Planning> {
+public class Planning {
 
     private final LinkedList<Vol> path = new LinkedList<Vol>();
 
     private int gain = 0;
 
-    public Planning(Vol v) {
-        addFirst(v);
-    }
-
-    public Planning(Vol first, Planning suivant) {
-        this.path.addAll(suivant.path);
-        this.gain = suivant.gain;
-        addFirst(first);
-    }
-
-    private void addFirst(Vol v) {
-        this.path.addFirst(v);
+    public void add(Vol v) {
+        this.path.addLast(v);
         this.gain += v.getPrix();
-    }
-
-    public boolean contains(Vol vol) {
-        return this.path.contains(vol);
     }
 
     public int getGain() {
@@ -37,10 +23,5 @@ public class Planning implements Comparable<Planning> {
 
     public List<Vol> getPath() {
         return path;
-    }
-
-    @Override
-    public int compareTo(Planning o) {
-        return Integer.valueOf(getGain()).compareTo(o.getGain());
     }
 }

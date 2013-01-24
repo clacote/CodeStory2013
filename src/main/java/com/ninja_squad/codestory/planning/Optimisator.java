@@ -13,31 +13,71 @@ public class Optimisator {
         }
     };
 
+    private static class BestPerHour implements Comparable<BestPerHour> {
+
+        private int gain;
+        private Vol vol;
+
+        private BestPerHour next;
+
+        private BestPerHour(Vol single) {
+            this.gain = single.getPrix();
+            this.vol = single;
+            this.next = null;
+        }
+
+        private BestPerHour(Vol first, BestPerHour next) {
+            this.gain = first.getPrix() + next.getGain();
+            this.vol = first;
+            this.next = next;
+        }
+
+        public int getGain() {
+            return gain;
+        }
+
+        @Override
+        public int compareTo(BestPerHour o) {
+            return Integer.valueOf(getGain()).compareTo(o.getGain());
+        }
+
+        public Planning toPlanning() {
+            Planning p = new Planning();
+            BestPerHour current = this;
+            while (current.next != null) {
+                p.add(current.vol);
+                current = current.next;
+            }
+            p.add(current.vol);
+            return p;
+        }
+    }
+
     public Planning computeOptimum(List<Vol> vols) {
 
         // Sort vols by start date
         Collections.sort(vols, ORDERED_VOL_CMP);
 
-        // Map des meilleurs plannings par heure de départ
-        Map<Integer, Planning> bests = new LRUMap(getMaxDureeVol(vols));
+        // Map des meilleurs gains par heure de départ
+        Map<Integer, BestPerHour> bests = new LRUMap(getMaxDureeVol(vols));
 
         // Liste des heures de départ effectives
         LinkedList<Integer> usedStartHours = new LinkedList<Integer>();
 
         // Iterate over vols (from later to sooner)
         // and compute best planning starting from each
-        Planning best = null;
+        BestPerHour best = null;
 
         for (int v = vols.size() - 1; v >= 0; --v) {
             Vol current = vols.get(v);
             // Find best next following departure
             int nextDeparture = findNextDeparture(current.getArrivee(), usedStartHours);
-            Planning bestForVol = bests.get(nextDeparture);
+            BestPerHour bestForVol = bests.get(nextDeparture);
 
             if (bestForVol == null) {
-                bestForVol = new Planning(current);
+                bestForVol = new BestPerHour(current);
             } else {
-                bestForVol = new Planning(current, bestForVol);
+                bestForVol = new BestPerHour(current, bestForVol);
             }
 
             if (best == null || best.compareTo(bestForVol) < 0) {
@@ -52,7 +92,7 @@ public class Optimisator {
             }
         }
 
-        return best;
+        return best.toPlanning();
     }
 
     private int getMaxDureeVol(List<Vol> vols) {
