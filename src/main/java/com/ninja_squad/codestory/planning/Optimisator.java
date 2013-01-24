@@ -60,12 +60,11 @@ public class Optimisator {
     }
 
     private int findNextDeparture(int sooner, List<Integer> startHours) {
-        int result = Integer.MAX_VALUE;
-        for (int i = startHours.size() - 1; i > 0 && sooner < result; i--) {
-            if (startHours.get(i) >= sooner) {
-                result = startHours.get(i);
+        for (Integer startHour : startHours) {
+            if (startHour.intValue() >= sooner) {
+                return startHour.intValue();
             }
         }
-        return result;
+        return -1;
     }
 }

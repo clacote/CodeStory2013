@@ -161,11 +161,17 @@ public class CodeStoryTest {
 
     @Test
     public void optimize() throws Exception {
-        final String input =
-                "[\n" +
-                        "  {\"VOL\": \"AF514\", \"DEPART\":0, \"DUREE\":5, \"PRIX\": 10}\n" +
-                        "\n" +
-                        "]";
+        final String input = "[ " +
+                "{ \"VOL\": \"bright-telescope-91\", \"DEPART\": 2, \"DUREE\": 7, \"PRIX\": 21 }, " +
+                "{ \"VOL\": \"steep-farmhand-81\", \"DEPART\": 0, \"DUREE\": 1, \"PRIX\": 12 }, " +
+                "{ \"VOL\": \"shrill-peephole-67\", \"DEPART\": 4, \"DUREE\": 3, \"PRIX\": 3 }, " +
+                "{ \"VOL\": \"crazy-watchtower-73\", \"DEPART\": 1, \"DUREE\": 1, \"PRIX\": 6 }, " +
+                "{ \"VOL\": \"curious-mainframe-35\", \"DEPART\": 4, \"DUREE\": 17, \"PRIX\": 4 }, " +
+                "{ \"VOL\": \"tender-lava-90\", \"DEPART\": 9, \"DUREE\": 2, \"PRIX\": 6 }, " +
+                "{ \"VOL\": \"hungry-backward-44\", \"DEPART\": 9, \"DUREE\": 1, \"PRIX\": 7 }, " +
+                "{ \"VOL\": \"super-genie-14\", \"DEPART\": 6, \"DUREE\": 5, \"PRIX\": 6 }, " +
+                "{ \"VOL\": \"vast-yak-32\", \"DEPART\": 8, \"DUREE\": 3, \"PRIX\": 8 }, " +
+                "{ \"VOL\": \"high-pitched-dunce-44\", \"DEPART\": 9, \"DUREE\": 3, \"PRIX\": 1 } ]";
         final String response = Request.Post(getURL("/jajascript/optimize"))
                 .bodyString(input, ContentType.TEXT_PLAIN)
                 .execute()
@@ -173,8 +179,8 @@ public class CodeStoryTest {
                 .asString();
         assertThat(response)
                 .isNotEmpty()
-                .contains("\"path\":[\"AF514\"]")
-                .contains("\"gain\":10");
+                .contains("\"path\":[\"steep-farmhand-81\",\"crazy-watchtower-73\",\"bright-telescope-91\",\"hungry-backward-44\"]")
+                .contains("\"gain\":46");
     }
 
     @Test
