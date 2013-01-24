@@ -56,6 +56,8 @@ public class Optimisator {
     }
 
     private int getMaxDureeVol(List<Vol> vols) {
+        // Actuellement aucun vol de plus de 24H dans les données CodeStory.
+        // Si ça arrivait, il suffirait de calculer ici le max dans vols des Vol.duree.
         return 24;
     }
 
