@@ -77,6 +77,12 @@ public class CodeStoryTest {
     }
 
     @Test
+    public void suiteCodeStory() throws Exception {
+        final String answer = ask("q=Souhaites-tu-participer-a-la-suite-de-Code-Story(OUI/NON)");
+        assertThat(answer).isEqualTo("OUI");
+    }
+
+    @Test
     public void unPlusUn() throws Exception {
         final String answer = ask("q=1+1");
         assertThat(answer).isEqualTo("2");
